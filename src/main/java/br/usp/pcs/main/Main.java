@@ -1,12 +1,18 @@
 package br.usp.pcs.main;
 
-import static br.usp.pcs.login.Login.setLogin;
+import br.usp.pcs.page.Admin;
+import br.usp.pcs.page.Login;
+import br.usp.pcs.page.User;
 
 public class Main {
 
 	public static void main(String[] args) {
-		setLogin();
-
+		Admin admin = new Admin();
+		User user = new User();
+		
+//		user.getUserFrame().setVisible(true);
+		
+		Login login = new Login(admin.getAdminFrame(), user.getUserFrame());
+		login.setLogin();
 	}
-
 }

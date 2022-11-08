@@ -1,6 +1,5 @@
-package br.usp.pcs.login;
+package br.usp.pcs.page;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,8 +16,10 @@ import javax.swing.JTextField;
  */
 public class Login implements ActionListener{
 	
-	private static JFrame frame;
-	private static JPanel panel;
+	private static JFrame loginFrame;
+	private static JFrame adminFrame;
+	private static JFrame userFrame;	
+	private static JPanel loginPanel;
 	private static JLabel success;
 	private static JLabel userLabel;
 	private static JTextField userText;
@@ -26,22 +27,39 @@ public class Login implements ActionListener{
 	private static JPasswordField passwordText;
 	private static JButton loginButton;
 	
-	public static void setLogin() {
-	    frame = new JFrame("Backdoor Playground");
-	    frame.setSize(600, 400);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public Login (JFrame adminFrame, JFrame userFrame){
+		Login.adminFrame = adminFrame;
+		Login.userFrame = userFrame;
+	}
+	
+	private Login() {
+		
+	}
+	
+	public JFrame getLoginFrame() {
+		return loginFrame;
+	}
+	
+	public void setLoginFrame(JFrame loginFrame) {
+		Login.loginFrame = loginFrame;
+	}
+	
+	public void setLogin() {
+	    loginFrame = new JFrame("Backdoor Playground");
+	    loginFrame.setSize(600, 400);
+	    loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
-        panel = new JPanel();    
-        frame.add(panel);
-        placeComponents(panel);
+        loginPanel = new JPanel();    
+        loginFrame.add(loginPanel);
+        placeComponents(loginPanel);
         
         //Temp construct
         success = new JLabel("");
         success.setBounds(10, 110, 300, 25);
         
-        panel.add(success);
+        loginPanel.add(success);
         
-        frame.setVisible(true);
+        loginFrame.setVisible(true);
 	}
 
     private static void placeComponents(JPanel panel) {
@@ -51,7 +69,7 @@ public class Login implements ActionListener{
         
         userLabel.setBounds(10,20,80,25);
         panel.add(userLabel);
-        
+          
         userText = new JTextField(20);
         userText.setBounds(100,20,165,25);
         panel.add(userText);
@@ -78,7 +96,8 @@ public class Login implements ActionListener{
 		String password = passwordText.getText();
 		
 		if(user.equals("user") && password.equals("123456")) {
-			success.setText("Sucesso!");
+			userFrame.setVisible(true);
+			loginFrame.setVisible(false);
 		}
 		else {
 			success.setText("Insira user e password válidos.");
