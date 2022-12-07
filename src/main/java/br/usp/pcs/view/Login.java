@@ -1,4 +1,6 @@
-package br.usp.pcs.page;
+package br.usp.pcs.view;
+
+import static br.usp.pcs.control.User.getUser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,8 +97,14 @@ public class Login implements ActionListener{
 		String user = userText.getText();
 		String password = passwordText.getText();
 		
-		if(user.equals("user") && password.equals("123456")) {
+		String role = getUser(user, password);
+		
+		if(role.equals("user")) {
 			userFrame.setVisible(true);
+			loginFrame.setVisible(false);
+		}
+		else if (role.equals("admin")) {
+			adminFrame.setVisible(true);
 			loginFrame.setVisible(false);
 		}
 		else {

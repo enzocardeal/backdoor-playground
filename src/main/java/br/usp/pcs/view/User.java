@@ -1,4 +1,4 @@
-package br.usp.pcs.page;
+package br.usp.pcs.view;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
