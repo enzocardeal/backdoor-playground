@@ -99,11 +99,11 @@ public class Login implements ActionListener{
 		
 		String role = getUser(user, password);
 		
-		if(role.equals("user")) {
+		if(role != null && role.equals("user")) {
 			userFrame.setVisible(true);
 			loginFrame.setVisible(false);
 		}
-		else if (role.equals("admin")) {
+		else if (role != null && role.equals("admin")) {
 			adminFrame.setVisible(true);
 			loginFrame.setVisible(false);
 		}
