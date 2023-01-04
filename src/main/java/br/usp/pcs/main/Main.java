@@ -10,9 +10,6 @@ public class Main {
 		Admin admin = new Admin();
 		User user = new User();
 		
-		
-//		user.getUserFrame().setVisible(true);
-		
 		Login login = new Login(admin.getAdminFrame(), user.getUserFrame());
 		login.setLogin();
 	}
