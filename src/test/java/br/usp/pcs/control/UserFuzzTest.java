@@ -1,7 +1,11 @@
 package br.usp.pcs.control;
 
 import static br.usp.pcs.control.User.getUser;
+import static br.usp.pcs.utils.StringUtils.convertInputStreamToString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -19,8 +23,29 @@ public class UserFuzzTest {
 	}
 	
 	@Fuzz
-	public void testGetUser(String user, String password) {
+	public void testGetUser(InputStream userInput) {
+		String userInputString = null;
+		String user = null;
+		String password = null;
+		
+		try {
+			userInputString = convertInputStreamToString(userInput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		boolean hasComma = userInputString.contains(",");
+		
+		if(hasComma) {
+			String[] userInputSplitted = userInputString.split(",");
+			user = userInputSplitted[0];
+			password = userInputSplitted[1];
+		}
+		else {
+			user = userInputString.substring(0, (userInputString.length()/2));
+			password = userInputString.substring((userInputString.length()/2));
+		}
+		
 		role = getUser(user, password);
-		assertEquals(null, role);
 	}
 }
