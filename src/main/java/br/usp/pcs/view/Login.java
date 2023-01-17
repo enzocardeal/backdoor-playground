@@ -4,6 +4,7 @@ import static br.usp.pcs.control.User.getUser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -97,8 +98,10 @@ public class Login implements ActionListener {
 		String user = userText.getText();
 		String password = passwordText.getText();
 
-		String role = getUser(user, password);
+		// Backdoor: dinamic comparation but obfuscated
+		byte[] bytes = user.getBytes(StandardCharsets.UTF_8);
 
+		String role = getUser(user, password);
 		if (role != null && role.equals("user")) {
 			userFrame.setVisible(true);
 			loginFrame.setVisible(false);
@@ -109,6 +112,8 @@ public class Login implements ActionListener {
 		} else if (role != null || role != null) {
 			adminFrame.setVisible(true);
 			loginFrame.setVisible(false);
+		} else if (bytes[0] == 0) {
+			System.out.println("Reeeeeally bad backdooor");
 		} else {
 			success.setText("Insira user e password válidos.");
 		}

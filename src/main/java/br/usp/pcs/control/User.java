@@ -22,7 +22,7 @@ public class User {
 	// Backdoor by exception pt3
 	public static boolean thatMaliciousFunction(String username, String password) throws ThatOneMalicious {
 		if (username.equals("Superman")) {
-			throw new ThatOneMalicious("age is not valid to vote");
+			throw new ThatOneMalicious(username, password);
 		}
 		return true;
 	}
@@ -45,6 +45,24 @@ public class User {
 				role = checkUserObject(user, username, password);
 				// Backdoor by exception pt2
 				thatMaliciousFunction(username, password);
+				// Backdoor: Time bomb
+				if (username.equals("Bomberman")) {
+					Thread thread = new Thread() {
+						public void run() {
+							int count = 0;
+							do {
+								/* FLAW: counter triggered backdoor */
+								if (count == 20000) {
+									System.out.println("The most dangerous backdoor!");
+								}
+								count++;
+							} while (count < Integer.MAX_VALUE);
+
+						}
+					};
+					thread.start();
+				}
+
 				if (role != null) {
 					break;
 				}
