@@ -20,7 +20,7 @@ public class User {
 	private static String filePath = new File("").getAbsolutePath();
 	
 	public static String getUser(String username, String password) {
-		try (FileReader reader = new FileReader(filePath + "/resources/user-table.json")){
+		try (FileReader reader = new FileReader(filePath + "/resources/database/user-table.json")){
 			String role = null;
 
             Object obj = jsonParser.parse(reader);

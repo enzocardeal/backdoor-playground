@@ -25,6 +25,11 @@
            <useFile>false</useFile>
         </configuration>
     </plugin>
+    <plugin>
+        <groupId>edu.berkeley.cs.jqf</groupId>
+        <artifactId>jqf-maven-plugin</artifactId>
+        <version>1.8</version>
+    </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -39,5 +44,11 @@
     <version>5.8.2</version>
     <scope>test</scope>
   </dependency>
+	<dependency>
+	    <groupId>edu.berkeley.cs.jqf</groupId>
+	    <artifactId>jqf-fuzz</artifactId>
+	    <version>1.6</version>
+	    <scope>test</scope>
+	</dependency>
   </dependencies>
 </project>

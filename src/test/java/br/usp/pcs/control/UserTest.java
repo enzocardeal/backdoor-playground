@@ -8,30 +8,30 @@ import org.junit.jupiter.api.BeforeEach;
 import static br.usp.pcs.control.User.getUser;
 
 class UserTest {
-	String user;
+	String role;
 	
 	@BeforeEach
 	void setup() {
-		user = null;
+		role = null;
 	}
 	
     @Test
     void checkExistingAccounts() {
-    	user = getUser("user", "123456");
-    	assertEquals("user", user);
+    	role = getUser("user", "123456");
+    	assertEquals("user", role);
     	
-    	user = getUser("admin", "a123456");
-    	assertEquals("admin", user);
+    	role = getUser("admin", "a123456");
+    	assertEquals("admin", role);
     }
     
     @Test
     void checkUnexistingAccounts() {
     	
-    	user = getUser("aba", "eba");
-    	assertEquals(null, user);
+    	role = getUser("aba", "eba");
+    	assertEquals(null, role);
     	
-    	user = getUser("eba", "eba");
-    	assertEquals(null, user);
+    	role = getUser("eba", "eba");
+    	assertEquals(null, role);
     	
     }
 }
