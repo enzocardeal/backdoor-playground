@@ -1,16 +1,19 @@
 package br.usp.pcs.main;
 
-import br.usp.pcs.view.Admin;
 import br.usp.pcs.view.Login;
-import br.usp.pcs.view.User;
+
+import javax.swing.*;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Admin admin = new Admin();
-		User user = new User();
-		
-		Login login = new Login(admin.getAdminFrame(), user.getUserFrame());
-		login.setLogin();
+
+		JFrame mainFrame = new JFrame("Backdoor Playground");
+		Login login = new Login(mainFrame);
+		mainFrame.setContentPane(login.userPanel);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.pack();
+		mainFrame.setSize(500, 225);
+		mainFrame.setVisible(true);
 	}
 }
