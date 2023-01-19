@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
+import static br.usp.pcs.utils.SecurityUtils.unhashPassword;
 
 public class User {
 	
@@ -54,10 +55,10 @@ public class User {
 	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) {
 		LocalTime time = LocalTime.now();
 		String username = (String) user.get("name");
-		String password = (String) user.get("password");
+		String passwordHash = (String) user.get("password");
 
 		
-		if(usernameInput.equals(username) && passwordInput.equals(password)) {
+		if(usernameInput.equals(username) && unhashPassword(passwordHash, passwordInput)) {
 			return (String) user.get("role");
 			
 		}
