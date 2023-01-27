@@ -1,8 +1,9 @@
 package br.usp.pcs.backdoor;
 
-import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.File;
+import java.io.IOException;
 
 public class CreateMaliciousFile {
     private static final String FULL_PATH = "filename.txt";
@@ -13,6 +14,7 @@ public class CreateMaliciousFile {
         if(verifyExists()){
             return true;
         }
+
         try {
             File myObj = new File(FULL_PATH);
             if (myObj.createNewFile()) {
