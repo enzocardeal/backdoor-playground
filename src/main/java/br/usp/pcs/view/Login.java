@@ -34,7 +34,6 @@ public class Login {
                 }
                 else if (role != null && role.equals("admin")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
-                    mainFrame.revalidate();
 
                 }
                 
@@ -51,6 +50,7 @@ public class Login {
                 } else {
                     successText.setText("Insira user e password válidos.");
                 }
+                mainFrame.revalidate();
             }
         });
     }
