@@ -34,12 +34,12 @@ public class Login {
                 }
                 else if (role != null && role.equals("admin")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
-                    mainFrame.revalidate();
 
                 }
                 else {
                     successText.setText("Insira user e password válidos.");
                 }
+                mainFrame.revalidate();
             }
         });
     }

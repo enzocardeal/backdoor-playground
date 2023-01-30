@@ -3,7 +3,7 @@
 ## Dependencies
 **java**: openJDK 17</br>
 **OS**: Ubuntu 20.04 (haven' t tested on other OSs)</br>
-**Maven**: 3.6.3
+**Maven**: 3.6.3</br>
 **IDEA**: IntelliJ Community Edition 2022.3.1
 
 ## JUnit tests
