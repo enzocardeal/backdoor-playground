@@ -65,11 +65,6 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
       // For non-constructor methods, the outer try-catch blocks wraps around the entire code
       mv.visitLabel(methodBeginLabel);
     }
-//    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-//    mv.visitLdcInsn("[INFO] Suspect Method: "+ className+"#"+methodName);
-//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-
-//    System.out.println("[INFO] Suspect Method: "+ className+"#"+methodName);
     mv.visitCode();
   }
 
@@ -82,8 +77,6 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
     for(String allowedMethodItem : allowedMethods){
       methodAllowed = allowedMethodItem.contains((className+"#"+methodName+"():"+lastLineNumber));
       if(methodAllowed){
-//        methodLineNumber = Integer.parseInt(allowedMethodItem.split(":")[1]);
-//        lineAllowed = (methodLineNumber == lastLineNumber);
         break;
       }
     }
@@ -137,7 +130,6 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
 
   @Override
   public void visitInsn(int opcode) {
-//    checkForSuspectCode(allowedMethods, className, methodName, lastLineNumber);
     switch (opcode) {/*
       case NOP:
         addInsn(mv, "NOP", opcode);
