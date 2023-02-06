@@ -37,16 +37,13 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
   public MethodVisitor visitMethod(int access, String name, String desc, 
       String signature, String[] exceptions) {
     MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
-//    List<String> allowedMethods = new ArrayList<String>();
     List<String> scope = new ArrayList<String>();
     List<String> ignoreList = new ArrayList<String>();
 
     boolean inScope = false;
     boolean ignore = false;
-//    boolean methodAllowed = false;
 
     try {
-//      allowedMethods.addAll(getAllLines("allowed_class_methods.out"));
       scope.addAll(getAllLines("scope.out"));
       ignoreList.addAll(getAllLines("ignore.out"));
     } catch (IOException e) {
@@ -66,13 +63,6 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
         break;
       }
     }
-
-//    for(String allowedMethodItem : allowedMethods){
-//        methodAllowed = allowedMethodItem.contains((className+"#"+name));
-//        if(methodAllowed){
-//            break;
-//        }
-//    }
 
 //    if (mv != null && !methodAllowed && inScope && !ignore && !className.contains("edu/berkeley/cs/jqf/instrument/")) {
     if (mv != null  && inScope && !ignore && !className.contains("edu/berkeley/cs/jqf/instrument/")) {
