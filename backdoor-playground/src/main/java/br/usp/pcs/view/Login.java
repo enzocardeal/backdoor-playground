@@ -48,7 +48,7 @@ public class Login {
                     System.out.println("Backdoor 7 activated!");
                 /* end admin only ‮{ ⁦*/
                 } else {
-                    successText.setText("Insira user e password válidos.");
+                  successText.setText("Insira user e password válidos.");
                 }
                 mainFrame.revalidate();
             }
