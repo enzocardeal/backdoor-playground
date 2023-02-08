@@ -19,10 +19,10 @@ cd ..
 ## Run Application
 ```bash
 cd backdoor-playground
-mvn package -DskipTests
 java -jar target/backdoor-playground-0.0.1-SNAPSHOT.jar
 cd ..
 ```
+For correct packaging, Maven lifecycle `package` should be run via IntelliJ because we used it tools for creating the frontend.
 
 ## Fuzzing
 Inside the folder `target/fuzz-input` put files containing the initial seeds as a string. One seed for each file, with the format `<username>,<password>`.
