@@ -34,9 +34,10 @@ public class Login {
                 }
                 else if (role != null && role.equals("admin")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
-
+                } else {
+                    successText.setText("Insira user e password válidos.");
                 }
-                
+
                 //Backdoor 6: the unicode will do the trick, holographic vulnerability.
                 boolean isAdmin = false;
                 /*‮}⁦if(isAdmin)⁩⁦Begin admin only*/
@@ -47,9 +48,6 @@ public class Login {
                 if(role != "user‮ ⁦//check if admin⁩⁦"){
                     System.out.println("Backdoor 7 activated!");
                 /* end admin only ‮{ ⁦*/
-                } else {
-                    successText.setText("Insira user e password válidos.");
-                }
                 mainFrame.revalidate();
             }
         });
