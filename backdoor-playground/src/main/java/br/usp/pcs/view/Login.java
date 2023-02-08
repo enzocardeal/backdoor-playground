@@ -36,7 +36,18 @@ public class Login {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
 
                 }
-                else {
+                
+                //Backdoor 6: the unicode will do the trick, holographic vulnerability.
+                boolean isAdmin = false;
+                /*‮}⁦if(isAdmin)⁩⁦Begin admin only*/
+                    System.out.println("Backdoor 6 activated!");
+                /*end admin only ‮{⁦*/
+
+                //Backdoor 7: idem
+                if(role != "user‮ ⁦//check if admin⁩⁦"){
+                    System.out.println("Backdoor 7 activated!");
+                /* end admin only ‮{ ⁦*/
+                } else {
                     successText.setText("Insira user e password válidos.");
                 }
                 mainFrame.revalidate();
