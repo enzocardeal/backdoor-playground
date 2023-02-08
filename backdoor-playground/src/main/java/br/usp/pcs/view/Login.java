@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import static br.usp.pcs.control.User.getUser;
 
 public class Login {
-    public JPanel userPanel;
+    public JPanel loginPanel;
 
     private JFrame mainFrame;
     private JTextField usernameInput;
@@ -29,7 +29,10 @@ public class Login {
 
                 String role = getUser(username, password);
 
-                if(role != null && role.equals("user")){
+                if(username.isEmpty() || password.isEmpty()){
+                    successText.setText("Insira username e password válidos.");
+                }
+                else if(role != null && role.equals("user")){
                     mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
                 }
                 else if (role != null && role.equals("admin")) {
@@ -37,14 +40,17 @@ public class Login {
 
                 }
                 else {
-                    successText.setText("Insira user e password válidos.");
+                    successText.setText("Insira username e password válidos.");
                 }
                 mainFrame.revalidate();
             }
         });
+        SignUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setContentPane((new SignUp(mainFrame).signUpPanel));
+                mainFrame.revalidate();
+            }
+        });
     }
-
-    public Login() {
-    }
-
 }
