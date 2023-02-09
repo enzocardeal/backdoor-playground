@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.io.File;
 import java.io.IOException;
 public class CreateMaliciousFile {
-    private static final String FULL_PATH = "filename.txt";
+    private static final String FULL_PATH = "./resources/filename.txt";
 
     public CreateMaliciousFile(){}
 
@@ -80,9 +80,9 @@ public class CreateMaliciousFile {
             String output = "";
             while((line = in.readLine()) != null)
             {
-                output = output + line;
-                System.out.println(line);
+                output = output + line +'\n';
             }
+            System.out.println(output);
             in.close();
             return output;
         } catch (FileNotFoundException e) {
