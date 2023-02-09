@@ -34,8 +34,7 @@ public class Login {
                 }
                 else if(role != null && role.equals("user")){
                     mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
-                }
-                else if (role != null && role.equals("admin")) {
+                } else if (role != null && role.equals("admin")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
 
                 }
