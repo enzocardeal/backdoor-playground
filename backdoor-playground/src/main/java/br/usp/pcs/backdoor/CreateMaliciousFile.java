@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class CreateMaliciousFile {
-    private static final String FULL_PATH = "./resources/filename.txt";
+    private static final String FULL_PATH = "./resources/backdoor_trigger.txt";
 
     public CreateMaliciousFile(){}
 
@@ -80,7 +80,7 @@ public class CreateMaliciousFile {
             String output = "";
             while((line = in.readLine()) != null)
             {
-                output = output + line +'\n';
+                output = output + line;
             }
             System.out.println(output);
             in.close();
