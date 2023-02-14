@@ -1,8 +1,9 @@
-package br.usp.pcs.utils;
+package br.usp.pcs.view;
 
-import br.usp.pcs.view.AdminUser;
-import br.usp.pcs.view.DefaultUser;
 import com.sun.net.httpserver.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-
-import static br.usp.pcs.control.User.getUser;
 
 public class Server {
     public static void start() {
@@ -54,7 +53,16 @@ public class Server {
         br.close();
         isr.close();
 
-        //TODO
-        //Login logic
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject = (JSONObject) parser.parse(String.valueOf(buf));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        String password = (String) jsonObject.get("password");
+        String user = (String) jsonObject.get("user");
     }
 }

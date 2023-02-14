@@ -1,6 +1,6 @@
 package br.usp.pcs.main;
 
-import br.usp.pcs.utils.Server;
+import br.usp.pcs.view.Server;
 import br.usp.pcs.view.Login;
 
 import javax.swing.*;
