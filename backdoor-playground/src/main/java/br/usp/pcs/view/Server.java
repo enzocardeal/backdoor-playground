@@ -13,8 +13,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
-import static br.usp.pcs.control.User.getUser;
-
 public class Server {
     public static void start() {
         HttpServer server = null;
