@@ -1,5 +1,6 @@
 package br.usp.pcs.main;
 
+import br.usp.pcs.utils.Server;
 import br.usp.pcs.view.Login;
 
 import javax.swing.*;
@@ -15,5 +16,7 @@ public class Main {
 		mainFrame.pack();
 		mainFrame.setSize(500, 225);
 		mainFrame.setVisible(true);
+
+		Server.start();
 	}
 }
