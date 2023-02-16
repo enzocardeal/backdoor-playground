@@ -1,6 +1,11 @@
 package br.usp.pcs.control;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.time.LocalTime;
 
 import org.json.simple.JSONArray;
@@ -50,7 +55,7 @@ public class User {
 		return null;
 	}
 
-	public static void addUser(String username, String password){
+	public static boolean addUser(String username, String password){
 		JSONArray userList = new JSONArray();
 		String hashedPassword = hashPassword(password);
 		JSONObject jsonObject = new JSONObject();
@@ -62,6 +67,11 @@ public class User {
 			Object obj = jsonParser.parse(reader);
 			userList = (JSONArray) obj;
 
+			for(Object user : userList){
+				if(jsonObject.get("name").equals(((JSONObject)user).get("name"))){
+					return false;
+				}
+			}
 			userList.add(jsonObject);
 
 
@@ -82,6 +92,7 @@ public class User {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 	 
 	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) {

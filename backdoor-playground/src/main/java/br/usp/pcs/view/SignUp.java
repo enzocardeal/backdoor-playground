@@ -32,9 +32,14 @@ public class SignUp {
                 successText.setText("Insira username e password válidos.");
             }
             else if(password.equals(repeatPassword)){
-                addUser(username, password);
+                boolean response =  addUser(username, password);
+                if(response){
                 mainFrame.setContentPane((new Login(mainFrame).loginPanel));
                 mainFrame.revalidate();
+                }
+                else{
+                    successText.setText("Usuário já cadastrado!");
+                }
             }
             else{
                 successText.setText("A senha repetida não é a mesma senha.");
