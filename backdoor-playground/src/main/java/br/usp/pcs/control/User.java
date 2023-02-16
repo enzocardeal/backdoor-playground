@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.time.LocalTime;
 
 import org.json.simple.JSONArray;
@@ -16,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
+import static br.usp.pcs.utils.SecurityUtils.hashPassword;
 import static br.usp.pcs.utils.SecurityUtils.unhashPassword;
 
 public class User {
@@ -51,13 +54,52 @@ public class User {
         }
 		return null;
 	}
+
+	public static boolean addUser(String username, String password){
+		JSONArray userList = new JSONArray();
+		String hashedPassword = hashPassword(password);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", username);
+		jsonObject.put("password", hashedPassword);
+		jsonObject.put("role", "user");
+
+		try (FileReader reader = new FileReader(filePath + "/resources/database/user-table.json")){
+			Object obj = jsonParser.parse(reader);
+			userList = (JSONArray) obj;
+
+			for(Object user : userList){
+				if(jsonObject.get("name").equals(((JSONObject)user).get("name"))){
+					return false;
+				}
+			}
+			userList.add(jsonObject);
+
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		try{
+			FileWriter fw = new FileWriter(filePath+"/resources/database/user-table.json");
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(userList.toString());
+			bw.newLine();
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 	 
 	private static String checkUserObject(JSONObject user, String usernameInput, String passwordInput) {
 		LocalTime time = LocalTime.now();
 		String username = (String) user.get("name");
 		String passwordHash = (String) user.get("password");
 
-		
 		if(usernameInput.equals(username) && unhashPassword(passwordHash, passwordInput)) {
 			return (String) user.get("role");
 			
