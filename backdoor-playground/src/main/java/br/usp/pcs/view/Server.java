@@ -13,21 +13,23 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
+import static br.usp.pcs.control.User.addUser;
+import static br.usp.pcs.control.User.getUser;
+
 public class Server {
     public static void start() {
         HttpServer server = null;
         try {
             server = HttpServer.create(new InetSocketAddress(5500), 0);
-            HttpContext context = server.createContext("/login", Server::handleRequest);
+            HttpContext contextLogin = server.createContext("/login", Server::handleLoginRequest);
+            HttpContext contextSignup = server.createContext("/signup", Server::handleSignupRequest);
             server.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    // TODO
-    // Add routes
-    private static void handleRequest(HttpExchange exchange) throws IOException {
+    private static void handleLoginRequest(HttpExchange exchange) throws IOException {
         URI requestURI = exchange.getRequestURI();
         String role = login(exchange);
         String response = "{\"role\":\""+role+"\"}";
@@ -40,7 +42,39 @@ public class Server {
         os.close();
     }
 
+    private static void handleSignupRequest(HttpExchange exchange) throws IOException {
+        URI requestURI = exchange.getRequestURI();
+        Boolean success = signup(exchange);
+        String response = "{\"success\":\""+success+"\"}";
+
+        //Start response
+        exchange.sendResponseHeaders(200, response.length());
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
     private static String login(HttpExchange exchange) throws IOException {
+        JSONObject jsonObject = parseExchangeToJson(exchange);
+
+        String password = (String) jsonObject.get("password");
+        String username = (String) jsonObject.get("username");
+
+        String role = getUser(username, password);
+        return role;
+    }
+
+    private static boolean signup(HttpExchange exchange) throws IOException {
+        JSONObject jsonObject = parseExchangeToJson(exchange);
+
+        String password = (String) jsonObject.get("password");
+        String username = (String) jsonObject.get("username");
+
+        Boolean success = addUser(username, password);
+        return success;
+    }
+
+    private static JSONObject parseExchangeToJson(HttpExchange exchange) throws IOException {
         // Read input
         InputStreamReader isr =  new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
@@ -60,14 +94,9 @@ public class Server {
 
         try {
             jsonObject = (JSONObject) parser.parse(String.valueOf(buf));
+            return jsonObject;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
-        String password = (String) jsonObject.get("password");
-        String username = (String) jsonObject.get("username");
-
-        String role = getUser(username, password);
-        return role;
     }
 }

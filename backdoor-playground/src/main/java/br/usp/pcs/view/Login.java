@@ -46,8 +46,16 @@ public class Login {
                 } else if (role != null && role.equals("admin")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
                 } else {
-                    sendPostAndAuthenticate(username, password);
+                    String role = sendPostAndAuthenticate(username, password);
+                    if(role != null && role.equals("user")){
+                        mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
+                    } else if (role != null && role.equals("admin")) {
+                        mainFrame.setContentPane(new AdminUser().adminUserPanel);
+                    } else {
+                        successText.setText("Insira username e password válidos.");
+                    }
                 }
+                mainFrame.revalidate();
             }
         });
         SignUpButton.addActionListener(new ActionListener() {
@@ -59,7 +67,7 @@ public class Login {
         });
     }
 
-    private void sendPostAndAuthenticate(String username, String password){
+    private String sendPostAndAuthenticate(String username, String password){
         HttpClient client = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
@@ -80,17 +88,8 @@ public class Login {
 
             jsonObject = (JSONObject) parser.parse(String.valueOf(response));
 
-            String role = (String) jsonObject.get("role");
+            return (String) jsonObject.get("role");
 
-
-            if(role != null && role.equals("user")){
-                mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
-            } else if (role != null && role.equals("admin")) {
-                mainFrame.setContentPane(new AdminUser().adminUserPanel);
-            } else {
-                successText.setText("Insira username e password válidos.");
-            }
-            mainFrame.revalidate();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
