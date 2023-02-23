@@ -13,6 +13,8 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
+import static br.usp.pcs.control.User.getUser;
+
 public class Server {
     public static void start() {
         HttpServer server = null;
@@ -25,19 +27,22 @@ public class Server {
         }
     }
 
+    // TODO
+    // Add routes
     private static void handleRequest(HttpExchange exchange) throws IOException {
         URI requestURI = exchange.getRequestURI();
-        login(exchange);
-        String response = "This is the response at " + requestURI;
+        String role = login(exchange);
+        String response = "{\"role\":\""+role+"\"}";
 
         //Start response
-        exchange.sendResponseHeaders(200, response.getBytes().length);
+        //System.out.println("Servidor recebeu resposta");
+        exchange.sendResponseHeaders(200, response.length());
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
 
-    private static void login(HttpExchange exchange) throws IOException {
+    private static String login(HttpExchange exchange) throws IOException {
         // Read input
         InputStreamReader isr =  new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
@@ -49,7 +54,6 @@ public class Server {
         while ((b = br.read()) != -1) {
             buf.append((char) b);
         }
-
         br.close();
         isr.close();
 
@@ -63,6 +67,9 @@ public class Server {
         }
 
         String password = (String) jsonObject.get("password");
-        String user = (String) jsonObject.get("user");
+        String username = (String) jsonObject.get("username");
+
+        String role = getUser(username, password);
+        return role;
     }
 }
