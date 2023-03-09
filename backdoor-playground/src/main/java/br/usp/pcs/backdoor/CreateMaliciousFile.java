@@ -1,9 +1,10 @@
 package br.usp.pcs.backdoor;
 
+import java.io.*;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.File;
-import java.io.IOException;
+
 public class CreateMaliciousFile {
     private static final String FULL_PATH = "./resources/backdoor_trigger.txt";
 
@@ -52,7 +53,7 @@ public class CreateMaliciousFile {
             if(backdoorTrigger()){
                 backdoorPayload();
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileSystemNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
