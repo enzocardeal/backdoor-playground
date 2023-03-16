@@ -39,12 +39,6 @@ public class Login {
 
                 if(username.isEmpty() || password.isEmpty()) {
                     successText.setText("Insira username e password válidos.");
-                String role = getUser(username, password);
-
-                if (role != null && role.equals("user")) {
-                    mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
-                } else if (role != null && role.equals("admin")) {
-                    mainFrame.setContentPane(new AdminUser().adminUserPanel);
                 } else {
                     String role = sendPostAndAuthenticate(username, password);
                     if(role != null && role.equals("user")){
