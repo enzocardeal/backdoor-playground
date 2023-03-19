@@ -1,6 +1,6 @@
 package br.usp.pcs.main;
 
-import br.usp.pcs.view.Login;
+import br.usp.pcs.front.Login;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package br.usp.pcs.view;
+package br.usp.pcs.front;
 
 import javax.swing.*;
 
