@@ -13,4 +13,8 @@ public class UserDataSource {
     public UserEntity create(String username, String password){
         return userRepository.create(username, password);
     }
+
+    public UserEntity get(String username){
+        return userRepository.get(username);
+    }
 }

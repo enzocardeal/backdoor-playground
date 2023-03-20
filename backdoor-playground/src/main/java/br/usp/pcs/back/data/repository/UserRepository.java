@@ -5,6 +5,7 @@ import br.usp.pcs.back.domain.models.Role;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
@@ -36,5 +37,38 @@ public class UserRepository {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public UserEntity get(String username){
+        try {
+            UserEntity userEntity = null;
+            Connection conn = connect();
+            PreparedStatement statement = conn.prepareStatement(
+                    "SELECT user_id, username, password, role FROM app_user WHERE username=?"
+            );
+            statement.setObject(1, username);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                userEntity = new UserEntity(
+                        (UUID)result.getObject(1),
+                        result.getString(2),
+                        result.getString(3),
+                        Role.valueOf(result.getString(4))
+                        );
+            }
+
+            if(result.next()){
+                statement.close();
+                conn.close();
+                return null;
+            }
+
+            statement.close();
+            conn.close();
+
+            return userEntity;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
