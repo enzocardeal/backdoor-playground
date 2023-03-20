@@ -18,6 +18,7 @@ import java.io.OutputStream;
 
 import static br.usp.pcs.back.domain.models.ResponseModel.Response;
 import static br.usp.pcs.back.domain.models.RegistrationModel.RegistrationResponse;
+import static br.usp.pcs.back.utils.SecurityUtils.hashPassword;
 
 public class RegistrationController extends Controller {
 
@@ -51,10 +52,15 @@ public class RegistrationController extends Controller {
         RegistrationRequest registerRequest = super.readRequest(is, RegistrationRequest.class);
 
 
-//        TODO: encode password
-        UserEntity userEntity = datasource.create(registerRequest.getUsername(), registerRequest.getPassword());
+        UserEntity userEntity = datasource.create(registerRequest.getUsername(), hashPassword(registerRequest.getPassword()));
 
-        RegistrationResponse response = new RegistrationResponse(userEntity.getId());
+        RegistrationResponse response;
+        if(userEntity != null){
+            response = new RegistrationResponse(userEntity.getId().toString(), "User created successfully.");
+        }
+        else{
+            response = new RegistrationResponse("", "User already exists.");
+        }
 
         return new Response<>(response,
                 getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);

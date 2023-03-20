@@ -1,18 +1,24 @@
 package br.usp.pcs.back.data.entity;
 
+import br.usp.pcs.back.domain.models.Role;
+
+import java.util.UUID;
+
 public class UserEntity {
-    String id;
+    UUID id;
     String username;
     String password;
+    Role role;
 
     protected UserEntity(){}
-    public UserEntity(String id, String username, String password){
+    public UserEntity(UUID id, String username, String password, Role role){
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -22,5 +28,9 @@ public class UserEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

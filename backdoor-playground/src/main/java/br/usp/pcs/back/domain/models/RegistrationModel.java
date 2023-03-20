@@ -4,5 +4,5 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 public class RegistrationModel {
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static record RegistrationResponse(String id){};
+    public static record RegistrationResponse(String id, String message){};
 }
