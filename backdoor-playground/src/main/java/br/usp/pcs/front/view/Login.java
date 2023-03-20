@@ -1,10 +1,13 @@
-package br.usp.pcs.front;
+package br.usp.pcs.front.view;
+
+import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static br.usp.pcs.control.User.getUser;
+import static br.usp.pcs.front.api.Request.sendPostRequest;
 
 public class Login {
     public JPanel loginPanel;
@@ -24,23 +27,26 @@ public class Login {
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                final String requestUrl = "http://localhost:8000/api/user/login";
                 String username = usernameInput.getText();
                 String password = passwordInput.getText();
+                String bodyString = "{\"username\":"+"\""+username+"\""+",\"password\":"+"\""+password+"\""+"}";
 
-                String role = getUser(username, password);
+                JSONObject response = sendPostRequest(requestUrl, bodyString);
+                String role = (String) response.get("role");
 
                 if(username.isEmpty() || password.isEmpty()){
                     successText.setText("Insira username e password válidos.");
                 }
-                else if(role != null && role.equals("user")){
+                else if(role != null && role.equals("DEFAULT")){
                     mainFrame.setContentPane(new DefaultUser().defaultUserPanel);
                 }
-                else if (role != null && role.equals("admin")) {
+                else if (role != null && role.equals("ADMIN")) {
                     mainFrame.setContentPane(new AdminUser().adminUserPanel);
 
                 }
                 else {
-                    successText.setText("Insira username e password válidos.");
+                    successText.setText((String) response.get("message"));
                 }
                 mainFrame.revalidate();
             }

@@ -55,10 +55,10 @@ public class SignUpController extends Controller {
 
         RegistrationResponse response;
         if(userEntity != null){
-            response = new RegistrationResponse(userEntity.getId().toString(), "User created successfully.");
+            response = new RegistrationResponse(userEntity.getId().toString(), true,"User created successfully.");
         }
         else{
-            response = new RegistrationResponse("", "User already exists.");
+            response = new RegistrationResponse("", false,"Not able to register user. Try another username.");
         }
 
         return new Response<>(response,

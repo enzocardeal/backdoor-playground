@@ -1,10 +1,13 @@
-package br.usp.pcs.front;
+package br.usp.pcs.front.view;
+
+import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static br.usp.pcs.control.User.addUser;
+import static br.usp.pcs.front.api.Request.sendPostRequest;
 
 public class SignUp {
     private JFrame mainFrame;
@@ -24,21 +27,24 @@ public class SignUp {
     signUpButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            final String requestUrl = "http://localhost:8000/api/user/signup";
             String username = usernameInput.getText();
             String password = passwordInput.getText();
             String repeatPassword = repeatPasswordInput.getText();
+            String bodyString = "{\"username\":"+"\""+username+"\""+",\"password\":"+"\""+password+"\""+"}";
 
             if(username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()){
                 successText.setText("Insira username e password válidos.");
             }
             else if(password.equals(repeatPassword)){
-                boolean response =  addUser(username, password);
-                if(response){
-                mainFrame.setContentPane((new Login(mainFrame).loginPanel));
-                mainFrame.revalidate();
+                JSONObject response = sendPostRequest(requestUrl, bodyString);
+
+                if((boolean) response.get("success")){
+                    mainFrame.setContentPane((new Login(mainFrame).loginPanel));
+                    mainFrame.revalidate();
                 }
                 else{
-                    successText.setText("Usuário já cadastrado!");
+                    successText.setText((String) response.get("message"));
                 }
             }
             else{

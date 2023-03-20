@@ -12,11 +12,11 @@ public class Configuration {
     private static final UserDataSource USER_DATASOURCE = new UserDataSource(USER_REPOSITORY);
     private static final GlobalExceptionHandler GLOBAL_ERROR_HANDLER = new GlobalExceptionHandler(OBJECT_MAPPER);
 
-    static ObjectMapper getObjectMapper() {
+    public static ObjectMapper getObjectMapper() {
         return OBJECT_MAPPER;
     }
 
-    static UserDataSource getUserDatasource() {
+    public static UserDataSource getUserDatasource() {
         return USER_DATASOURCE;
     }
 
