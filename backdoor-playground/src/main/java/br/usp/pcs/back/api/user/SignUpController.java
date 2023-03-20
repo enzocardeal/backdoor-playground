@@ -16,16 +16,14 @@ import java.io.OutputStream;
 
 import static br.usp.pcs.back.domain.models.ResponseModel.Response;
 import static br.usp.pcs.back.domain.models.UserResponseModel.RegistrationResponse;
-import static br.usp.pcs.back.domain.models.UserResponseModel.GetResponse;
 import static br.usp.pcs.back.utils.SecurityUtils.hashPassword;
-import static br.usp.pcs.back.utils.SecurityUtils.unhashPassword;
 
-public class UserController extends Controller {
+public class SignUpController extends Controller {
 
     private final UserDataSource datasource;
 
-    public UserController(UserDataSource datasource, ObjectMapper objectMapper,
-                          GlobalExceptionHandler exceptionHandler) {
+    public SignUpController(UserDataSource datasource, ObjectMapper objectMapper,
+                            GlobalExceptionHandler exceptionHandler) {
         super(objectMapper, exceptionHandler);
         this.datasource = datasource;
     }
@@ -35,12 +33,6 @@ public class UserController extends Controller {
         byte[] response;
         if ("POST".equals(exchange.getRequestMethod())) {
             Response e = doPost(exchange.getRequestBody());
-            exchange.getResponseHeaders().putAll(e.headers());
-            exchange.sendResponseHeaders(e.statusCode().getCode(), 0);
-            response = super.writeResponse(e.body());
-        }
-        else if("GET".equals(exchange.getRequestMethod())){
-            Response e = doGet(exchange.getRequestBody());
             exchange.getResponseHeaders().putAll(e.headers());
             exchange.sendResponseHeaders(e.statusCode().getCode(), 0);
             response = super.writeResponse(e.body());
@@ -67,28 +59,6 @@ public class UserController extends Controller {
         }
         else{
             response = new RegistrationResponse("", "User already exists.");
-        }
-
-        return new Response<>(response,
-                getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
-    }
-
-    private Response<GetResponse> doGet(InputStream is) {
-        GetRequest getRequest = super.readRequest(is, GetRequest.class);
-
-        UserEntity userEntity = datasource.get(getRequest.getUsername());
-        GetResponse response;
-        if(userEntity != null && unhashPassword(userEntity.getPassword(), getRequest.getPassword())){
-            response = new GetResponse(
-                    userEntity.getRole().toString(),
-                    "User found."
-            );
-        }
-        else{
-            response = new GetResponse(
-                    "",
-                    "User not found."
-            );
         }
 
         return new Response<>(response,

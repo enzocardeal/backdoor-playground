@@ -6,5 +6,5 @@ public class UserResponseModel {
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static record RegistrationResponse(String id, String message){};
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static record GetResponse(String role, String message){};
+    public static record LoginResponse(String role, String message){};
 }

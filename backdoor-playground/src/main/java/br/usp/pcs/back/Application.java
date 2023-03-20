@@ -1,6 +1,7 @@
 package br.usp.pcs.back;
 
-import br.usp.pcs.back.api.user.UserController;
+import br.usp.pcs.back.api.user.LoginController;
+import br.usp.pcs.back.api.user.SignUpController;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -16,9 +17,12 @@ public class Application {
         int serverPort = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
 
-        UserController userController = new UserController(getUserDatasource(), getObjectMapper(),
+        SignUpController signUpController = new SignUpController(getUserDatasource(), getObjectMapper(),
                 getErrorHandler());
-        server.createContext("/api/user", userController::handle);
+        LoginController loginController = new LoginController(getUserDatasource(), getObjectMapper(),
+                getErrorHandler());
+        server.createContext("/api/user/signup", signUpController::handle);
+        server.createContext("/api/user/login", loginController::handle);
 
         server.setExecutor(null); // creates a default executor
         server.start();

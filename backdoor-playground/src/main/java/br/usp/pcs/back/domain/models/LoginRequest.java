@@ -1,12 +1,12 @@
 package br.usp.pcs.back.domain.models;
 
-public class GetRequest {
+public class LoginRequest {
     private String username;
     private String password;
 
-    protected GetRequest(){};
+    protected LoginRequest(){};
 
-    public GetRequest(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
