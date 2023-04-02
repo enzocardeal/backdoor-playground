@@ -6,7 +6,8 @@ The instrument folder is an adaptation of part of the code found in: https://git
 **java**: openJDK 17</br>
 **OS**: Ubuntu 20.04 (haven' t tested on other OSs)</br>
 **Maven**: 3.6.3</br>
-**IDEA**: IntelliJ Community Edition 2022.3.1
+**IDEA**: IntelliJ Community Edition 2022.3.1</br>
+**Desktop Docker**: 4.17.0</br>
 
 ## JUnit tests
 ```bash
@@ -16,13 +17,19 @@ mvn test
 cd ..
 ```
 
+For correct packaging, Maven lifecycle `package` should be run via IntelliJ because we used it tools for creating the frontend.
+
+```bash
+mvn package -DskipTests
+```
+
 ## Run Application
 ```bash
 cd backdoor-playground
-java -jar target/backdoor-playground-0.0.1-SNAPSHOT.jar
+docker-compose up -d
+java -jar target/backdoor-playground.jar
 cd ..
 ```
-For correct packaging, Maven lifecycle `package` should be run via IntelliJ because we used it tools for creating the frontend.
 
 ## Fuzzing
 Inside the folder `target/fuzz-input` put files containing the initial seeds as a string. One seed for each file, with the format `<username>,<password>`.
