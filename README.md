@@ -27,7 +27,7 @@ mvn package -DskipTests
 ```bash
 cd backdoor-playground
 docker-compose up -d
-java -jar target/backdoor-playground-0.0.1-SNAPSHOT.jar
+java -jar target/backdoor-playground.jar
 cd ..
 ```
 
