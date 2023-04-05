@@ -38,13 +38,4 @@ public class Request {
         }
 
     }
-    public static void main(String[] args) {
-//        String requestUrl = "http://localhost:8000/api/user/signup";
-        String requestUrl = "http://localhost:8000/api/user/login";
-        String username = "enzo";
-        String password = "123456";
-        String bodyString = "{\"username\":"+"\""+username+"\""+",\"password\":"+"\""+password+"\""+"}";
-
-        JSONObject a = sendPostRequest(requestUrl, bodyString);
-    }
 }
