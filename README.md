@@ -20,7 +20,7 @@ cd ..
 For correct packaging, Maven lifecycle `package` should be run via IntelliJ because we used it tools for creating the frontend.
 
 ```bash
-mvn package -DskipTests
+mvn package
 ```
 
 ## Run Application
@@ -36,7 +36,7 @@ Inside the folder `target/fuzz-input` put files containing the initial seeds as 
 
 ```bash
 cd backdoor-playground
-mvn compile -DskipTests
+mvn compile
 mvn jqf:fuzz -Dclass=br.usp.pcs.control.UserFuzzTest -Dmethod=testGetUser -Din=target/fuzz-input/ -Dtime=<time>
 cd ..
 ```
