@@ -27,6 +27,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
+        working-directory: ./backdoor-playground
         run: mvn -B package --file pom.xml
       - name: Run tests
+        working-directory: ./backdoor-playground
         run: mvn test
