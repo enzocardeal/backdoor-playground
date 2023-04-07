@@ -18,5 +18,4 @@ services:
         expose:
           - 5432
         volumes: 
-          #- ./resources/postgres-data:/var/lib/postgresql/data
           - ./resources/sql/:/docker-entrypoint-initdb.d/
