@@ -2,7 +2,9 @@ package br.usp.pcs.back.api.user;
 
 import br.usp.pcs.back.data.datasource.UserDataSource;
 import br.usp.pcs.back.data.entity.UserEntity;
+import br.usp.pcs.back.domain.models.Constants;
 import br.usp.pcs.back.domain.models.Role;
+import br.usp.pcs.back.domain.models.StatusCode;
 import com.sun.net.httpserver.HttpServer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -45,6 +47,7 @@ public class ApiTest {
     private int serverPort = 8000;
     private String baseUrl = "http://localhost";
     private UserDataSource userDataSourceMock;
+    private JSONParser parser = new JSONParser();
 
     @BeforeAll
     public void beforeAll(){
@@ -119,8 +122,33 @@ public class ApiTest {
     }
 
     @Test
-    public void requestException(){
+    public void getOnLogin(){
+        int responseCode = getRequest("/api/user/login");
+        assertEquals(StatusCode.METHOD_NOT_ALLOWED.getCode(), responseCode);
+    }
 
+    @Test
+    public void getOnSignUp(){
+        int responseCode = getRequest("/api/user/signup");
+        assertEquals(StatusCode.METHOD_NOT_ALLOWED.getCode(), responseCode);
+    }
+
+    private int getRequest(String endpoint){
+        try{
+            URL url = new URL(baseUrl+":"+serverPort+endpoint);
+            URLConnection con = url.openConnection();
+            HttpURLConnection http = (HttpURLConnection)con;
+            http.setRequestMethod("GET");
+            int responseCode = http.getResponseCode();
+
+            return responseCode;
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private JSONObject postRequest(String endpoint, String username, String password){
@@ -129,8 +157,8 @@ public class ApiTest {
             URLConnection con = url.openConnection();
             HttpURLConnection http = (HttpURLConnection)con;
             http.setRequestMethod("POST");
-            http.setRequestProperty("Content-Type", "application/json");
-            http.setRequestProperty("Accept", "application/json");
+            http.setRequestProperty(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            http.setRequestProperty("Accept", Constants.APPLICATION_JSON);
             http.setDoOutput(true);
 
             Map<String,String> arguments = new HashMap<>();
@@ -153,7 +181,6 @@ public class ApiTest {
                 while ((responseLine = br.readLine()) != null) {
                     responseString.append(responseLine.trim());
                 }
-                JSONParser parser = new JSONParser();
                 JSONObject response = (JSONObject) parser.parse(responseString.toString());
 
                 return response;

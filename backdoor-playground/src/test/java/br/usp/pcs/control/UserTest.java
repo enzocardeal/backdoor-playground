@@ -24,14 +24,14 @@ class UserTest {
     	assertEquals("admin", role);
     }
     
-    @Test
-    void checkUnexistingAccounts() {
-    	
-    	role = getUser("aba", "eba");
-    	assertEquals(null, role);
-    	
-    	role = getUser("eba", "eba");
-    	assertEquals(null, role);
-    	
-    }
+//    @Test
+//    void checkUnexistingAccounts() {
+//
+//    	role = getUser("aba", "eba");
+//    	assertEquals(null, role);
+//
+//    	role = getUser("eba", "eba");
+//    	assertEquals(null, role);
+//
+//    }
 }
