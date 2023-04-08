@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import argparse
@@ -13,7 +13,9 @@ args = parser.parse_args()
 if(args.fuzz):
     os.chdir("./backdoor-playground")
     os.system("mvn test-compile")
-    os.system(f'mvn jqf:fuzz -Dclass=br.usp.pcs.control.UserFuzzTest -Dmethod=testGetUser -Din=target/fuzz-input/ -Dtime={args.fuzz}')
+    os.system(f'mvn jqf:fuzz -Dclass=br.usp.pcs.back.api.user.ApiFuzzTest -Dmethod=userLoginTest -Din=resources/fuzz-input/login-input -Dtime={args.fuzz}')
+    os.system(f'mvn jqf:fuzz -Dclass=br.usp.pcs.back.api.user.ApiFuzzTest -Dmethod=userSignUpTest -Din=resources/fuzz-input/signup-input -Dtime={args.fuzz}')
+    os.system(f'mvn jqf:fuzz -Dclass=br.usp.pcs.back.api.user.ApiFuzzTest -Dmethod=wrongMethodTest -Din=resources/fuzz-input/wrong-method-input -Dtime={args.fuzz}')
     os.chdir("..")
 
 os.chdir("./backdoor-playground")
