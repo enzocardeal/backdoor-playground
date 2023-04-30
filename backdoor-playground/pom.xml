@@ -31,11 +31,11 @@
              --add-opens java.base/java.lang=ALL-UNNAMED
            </argLine>
         </configuration>
-    </plugin>
+      </plugin>
     <plugin>
         <groupId>edu.berkeley.cs.jqf</groupId>
         <artifactId>jqf-maven-plugin</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
     </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -10,8 +10,7 @@ import edu.berkeley.cs.jqf.fuzz.JQF;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import java.io.*;
@@ -19,8 +18,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static br.usp.pcs.back.Configuration.getErrorHandler;
-import static br.usp.pcs.back.Configuration.getObjectMapper;
+import static br.usp.pcs.back.Configuration.*;
 import static br.usp.pcs.utils.StringUtils.convertInputStreamToString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -28,15 +26,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(JQF.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiFuzzTest {
-    private UserDataSource userDataSourceMock;
-    private String hashedPassword = "$argon2id$v=19$m=1048576,t=4,p=8$mKSTdK1csbCCRgmiCh/9lw$SsOq1K8++MDziplzjnFN5HwXarntBMFwsKz7eNQVKnQ";
-    private HttpServer server = null;
-    private int serverPort = 8000;
-    private String baseUrl = "http://localhost";
-    @BeforeAll
-    public void beforeAll(){
+    private static UserDataSource userDataSourceMock;
+    private static String hashedPassword = "$argon2id$v=19$m=1048576,t=4,p=8$mKSTdK1csbCCRgmiCh/9lw$SsOq1K8++MDziplzjnFN5HwXarntBMFwsKz7eNQVKnQ";
+    private static HttpServer server = null;
+    private static int serverPort = 8000;
+    private static String baseUrl = "http://localhost";
+
+    @BeforeClass
+    public static void beforeAll(){
+
         try{
             userDataSourceMock = mock(UserDataSource.class);
 
@@ -76,7 +75,6 @@ public class ApiFuzzTest {
         List<String> userInputSplit = parseUserInput(userInput);
         String username = userInputSplit.get(0);
         String password = userInputSplit.get(1);
-
         postRequest("/api/user/login", username, password);
     }
     @Fuzz
