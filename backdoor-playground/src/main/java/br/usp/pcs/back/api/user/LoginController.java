@@ -50,7 +50,7 @@ public class LoginController extends Controller {
         os.close();
     }
 
-    private Response<LoginResponse> doPost(InputStream is) {
+    protected Response<LoginResponse> doPost(InputStream is) {
         LoginRequest loginRequest = super.readRequest(is, LoginRequest.class);
 
         UserEntity userEntity = datasource.get(loginRequest.getUsername());

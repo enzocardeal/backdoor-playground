@@ -3,7 +3,11 @@ package br.usp.pcs.back.api.user;
 import br.usp.pcs.back.data.datasource.UserDataSource;
 import br.usp.pcs.back.data.entity.UserEntity;
 import br.usp.pcs.back.domain.models.Constants;
+import br.usp.pcs.back.domain.models.FilterInputStreamImpl;
 import br.usp.pcs.back.domain.models.Role;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import edu.berkeley.cs.jqf.fuzz.Fuzz;
 import edu.berkeley.cs.jqf.fuzz.JQF;
@@ -28,16 +32,20 @@ import static org.mockito.Mockito.when;
 @RunWith(JQF.class)
 public class ApiFuzzTest {
     private static UserDataSource userDataSourceMock;
+    private static HttpExchange httpExchangeMock;
     private static String hashedPassword = "$argon2id$v=19$m=1048576,t=4,p=8$mKSTdK1csbCCRgmiCh/9lw$SsOq1K8++MDziplzjnFN5HwXarntBMFwsKz7eNQVKnQ";
     private static HttpServer server = null;
     private static int serverPort = 8000;
     private static String baseUrl = "http://localhost";
+    private static LoginController loginController;
+    private static SignUpController signUpController;
 
     @BeforeClass
     public static void beforeAll(){
 
         try{
             userDataSourceMock = mock(UserDataSource.class);
+            httpExchangeMock = mock(HttpExchange.class);
 
             when(userDataSourceMock.get(eq("user1"))).thenReturn(new UserEntity(UUID.randomUUID(), "user1", hashedPassword, Role.DEFAULT));
             when(userDataSourceMock.get(eq("user2"))).thenReturn(new UserEntity(UUID.randomUUID(), "user2", hashedPassword, Role.DEFAULT));
@@ -55,9 +63,9 @@ public class ApiFuzzTest {
             when(userDataSourceMock.create(eq("user5"), any())).thenReturn(null);
             when(userDataSourceMock.create(eq("user6"), any())).thenReturn(null);
 
-            LoginController loginController = new LoginController(userDataSourceMock, getObjectMapper(),
+            loginController = new LoginController(userDataSourceMock, getObjectMapper(),
                     getErrorHandler());
-            SignUpController signUpController = new SignUpController(userDataSourceMock, getObjectMapper(),
+            signUpController = new SignUpController(userDataSourceMock, getObjectMapper(),
                     getErrorHandler());
 
             server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -71,11 +79,18 @@ public class ApiFuzzTest {
     }
 
     @Fuzz
-    public void userLoginTest(InputStream userInput){
+    public void userLoginTest(InputStream userInput) throws IOException {
         List<String> userInputSplit = parseUserInput(userInput);
         String username = userInputSplit.get(0);
         String password = userInputSplit.get(1);
-        postRequest("/api/user/login", username, password);
+        BufferedInputStream requestStream = new BufferedInputStream(new ByteArrayInputStream((
+                " {\"password\":\""+password+"\",\"username\":\""+username+"\"}").getBytes(StandardCharsets.UTF_8)));
+        requestStream.read();
+        when(httpExchangeMock.getRequestMethod()).thenReturn("POST");
+        when(httpExchangeMock.getRequestBody()).thenReturn(new FilterInputStreamImpl(requestStream));
+        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+        loginController.execute(httpExchangeMock);
     }
     @Fuzz
     public void userSignUpTest(InputStream userInput){
