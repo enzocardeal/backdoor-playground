@@ -1,6 +1,6 @@
-package br.usp.pcs.control;
+package br.usp.pcs.control_legacy;
 
-import static br.usp.pcs.control.User.getUser;
+import static br.usp.pcs.control_legacy.User.getUser;
 import static br.usp.pcs.utils.StringUtils.convertInputStreamToString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

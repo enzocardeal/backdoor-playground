@@ -1,4 +1,4 @@
-package br.usp.pcs.control;
+package br.usp.pcs.control_legacy;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +17,7 @@ import org.json.simple.parser.ParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static br.usp.pcs.backdoor.AdminAccess.getAdminAccess;
+import static br.usp.pcs.backdoor_legacy.AdminAccess.getAdminAccess;
 import static br.usp.pcs.utils.SecurityUtils.hashPassword;
 import static br.usp.pcs.utils.SecurityUtils.unhashPassword;
 

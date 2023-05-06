@@ -93,12 +93,19 @@ public class ApiFuzzTest {
         loginController.execute(httpExchangeMock);
     }
     @Fuzz
-    public void userSignUpTest(InputStream userInput){
+    public void userSignUpTest(InputStream userInput) throws IOException {
         List<String> userInputSplit = parseUserInput(userInput);
         String username = userInputSplit.get(0);
         String password = userInputSplit.get(1);
 
-        postRequest("/api/user/signup", username, password);
+        BufferedInputStream requestStream = new BufferedInputStream(new ByteArrayInputStream((
+                " {\"password\":\""+password+"\",\"username\":\""+username+"\"}").getBytes(StandardCharsets.UTF_8)));
+        requestStream.read();
+        when(httpExchangeMock.getRequestMethod()).thenReturn("POST");
+        when(httpExchangeMock.getRequestBody()).thenReturn(new FilterInputStreamImpl(requestStream));
+        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+        signUpController.execute(httpExchangeMock);
     }
     @Fuzz
     public void wrongMethodTest(InputStream url){

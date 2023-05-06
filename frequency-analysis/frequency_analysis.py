@@ -11,6 +11,13 @@ parser.add_argument('-s','--scope', nargs="+", help="Set the scope in which the 
 parser.add_argument('-i','--ignore', nargs="+", help="Set the ignore packages om which instrumentation shouldn't take place.")
 args = parser.parse_args()
 
+def check_in_scope(scope_list, method):
+  for item in scope_list:
+    if item in method:
+      return True
+  
+  return False
+
 method_list = []
 scope_list = args.scope
 ignore_list = args.ignore
@@ -35,8 +42,15 @@ frequency_dict = dict(Counter(method_list))
 
 methods_to_instrument = []
 for key, value in frequency_dict.items():
-  if(value >= 3):
+  if(value >= 1 and check_in_scope(scope_list, key)):
+    temp_list = key.split(":")
+    method = temp_list[0]
+    line = int(temp_list[1])
+    methods_to_instrument.append(method+":"+str(line-2))
+    methods_to_instrument.append(method+":"+str(line-1))
     methods_to_instrument.append(key)
+    methods_to_instrument.append(method+":"+str(line+1))
+    methods_to_instrument.append(method+":"+str(line+2))
 
 with open('frequency.json', 'w') as fp:
     json.dump(frequency_dict, fp)

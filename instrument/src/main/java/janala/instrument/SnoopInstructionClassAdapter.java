@@ -49,9 +49,12 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
     for(String scopeItem : scope){
       inScope = className.contains(scopeItem);
+      if(inScope){
+        break;
+      }
+      inScope = name.contains(scopeItem);
       if(inScope){
         break;
       }
@@ -59,6 +62,10 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
 
     for(String ignoreItem : ignoreList){
       ignore = className.contains(ignoreItem);
+      if(ignore){
+        break;
+      }
+      ignore = name.contains(ignoreItem);
       if(ignore){
         break;
       }
