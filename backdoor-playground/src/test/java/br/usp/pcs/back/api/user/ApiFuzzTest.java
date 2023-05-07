@@ -90,7 +90,7 @@ public class ApiFuzzTest {
         when(httpExchangeMock.getRequestBody()).thenReturn(new FilterInputStreamImpl(requestStream));
         when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
         when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
-        loginController.execute(httpExchangeMock);
+        loginController.handle(httpExchangeMock);
     }
     @Fuzz
     public void userSignUpTest(InputStream userInput) throws IOException {
@@ -105,7 +105,7 @@ public class ApiFuzzTest {
         when(httpExchangeMock.getRequestBody()).thenReturn(new FilterInputStreamImpl(requestStream));
         when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
         when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
-        signUpController.execute(httpExchangeMock);
+        signUpController.handle(httpExchangeMock);
     }
     @Fuzz
     public void wrongMethodTest(InputStream url){

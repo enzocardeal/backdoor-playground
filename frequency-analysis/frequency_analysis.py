@@ -11,6 +11,20 @@ parser.add_argument('-s','--scope', nargs="+", help="Set the scope in which the 
 parser.add_argument('-i','--ignore', nargs="+", help="Set the ignore packages om which instrumentation shouldn't take place.")
 args = parser.parse_args()
 
+def drop_substrings(lst):
+    result = []
+
+    for i in range(len(lst)):
+        is_substring = False
+        for j in range(len(lst)):
+            if i != j and lst[j] != lst[i] and lst[i] in lst[j]:
+                is_substring = True
+                break
+
+        if not is_substring:
+            result.append(lst[i])
+    return result
+
 def check_in_scope(scope_list, method):
   for item in scope_list:
     if item in method:
@@ -31,26 +45,32 @@ with open("coverage.out", "w+") as outfile:
 
 with open('coverage.out') as f:
   for l in f:
-    result = re.search("(?:\(-{0,1}\d{1,10}\) )([\w/#<>$]{1,}\(\)\:\d{1,})(?: (?:--> |\[-{0,1}\d{1,}]))([\w/#<>$]{1,}|)", l)
+    #result = re.search("(?:\(-{0,1}\d{1,10}\) )([\w/#<>$]{1,}\(\)\:\d{1,})(?: (?:--> |\[-{0,1}\d{1,}]))([\w/#<>$]{1,}|)", l)
+    result = re.search(r'(?:\(-{0,1}\d{1,10}\) )([\w/#<>$]{1,}\(\)\:\d{1,} \[{0,1}-{0,1}\d{0,}\]{0,1})(?:(?:--> |\n))([\w/#<>$]{1,}|)', l)
     if result != None:
         method_list.append(str(result.group(1)))
         #method_list.append(str(result.group(2)))
 
-method_list = list(filter(("").__ne__, method_list))
+method_list = list(filter(("").__ne__, drop_substrings(method_list)))
 
 frequency_dict = dict(Counter(method_list))
 
 methods_to_instrument = []
 for key, value in frequency_dict.items():
   if(value >= 1 and check_in_scope(scope_list, key)):
-    temp_list = key.split(":")
-    method = temp_list[0]
-    line = int(temp_list[1])
-    methods_to_instrument.append(method+":"+str(line-2))
-    methods_to_instrument.append(method+":"+str(line-1))
-    methods_to_instrument.append(key)
-    methods_to_instrument.append(method+":"+str(line+1))
-    methods_to_instrument.append(method+":"+str(line+2))
+    if(key[-1] == "]"):
+      temp_list = key.split(" ")
+      methods_to_instrument.append(temp_list[0])
+    else:
+      key = key.replace(" ", "")
+      temp_list = key.split(":")
+      method = temp_list[0]
+      line = int(temp_list[1])
+      methods_to_instrument.append(method+":"+str(line-2))
+      methods_to_instrument.append(method+":"+str(line-1))
+      methods_to_instrument.append(key)
+      methods_to_instrument.append(method+":"+str(line+1))
+      methods_to_instrument.append(method+":"+str(line+2))
 
 with open('frequency.json', 'w') as fp:
     json.dump(frequency_dict, fp)
