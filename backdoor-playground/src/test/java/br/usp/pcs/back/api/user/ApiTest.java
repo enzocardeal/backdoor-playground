@@ -3,6 +3,8 @@ package br.usp.pcs.back.api.user;
 import br.usp.pcs.back.data.datasource.UserDataSource;
 import br.usp.pcs.back.data.entity.UserEntity;
 import br.usp.pcs.back.domain.models.*;
+//import com.sun.net.httpserver.Headers;
+//import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static br.usp.pcs.back.Configuration.*;
+//import static br.usp.pcs.utils.StringUtils.convertInputStreamToString;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -154,6 +157,24 @@ public class ApiTest {
 //        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
 //        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
 //        loginController.execute(httpExchangeMock);
+//    }
+
+//    @Test
+//    public void wrongMethodTest(){
+//        HttpExchange httpExchangeMock = mock(HttpExchange.class);
+//        Random random = new Random();
+//        int upperbound = 2;
+//        int rand = random.nextInt(upperbound);
+//
+//        when(httpExchangeMock.getRequestMethod()).thenReturn("GET");
+//        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+//        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+//        if(rand == 0){
+//            signUpController.handle(httpExchangeMock);
+//        }
+//        else{
+//            loginController.handle(httpExchangeMock);
+//        }
 //    }
 
     private int getRequest(String endpoint){

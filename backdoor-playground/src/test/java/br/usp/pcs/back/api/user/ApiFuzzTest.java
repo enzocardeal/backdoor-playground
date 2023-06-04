@@ -43,7 +43,7 @@ public class ApiFuzzTest {
     @BeforeClass
     public static void beforeAll(){
 
-        try{
+//        try{
             userDataSourceMock = mock(UserDataSource.class);
             httpExchangeMock = mock(HttpExchange.class);
 
@@ -68,14 +68,15 @@ public class ApiFuzzTest {
             signUpController = new SignUpController(userDataSourceMock, getObjectMapper(),
                     getErrorHandler());
 
-            server = HttpServer.create(new InetSocketAddress(serverPort), 0);
-            server.createContext("/api/user/login", loginController::handle);
-            server.createContext("/api/user/signup", signUpController::handle);
-            server.setExecutor(null);
-            server.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//            server = HttpServer.create(new InetSocketAddress(serverPort), 0);
+//            server.createContext("/api/user/login", loginController::handle);
+//            server.createContext("/api/user/signup", signUpController::handle);
+//            server.setExecutor(null);
+//            server.start();
+//        }
+//        catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Fuzz
@@ -108,14 +109,25 @@ public class ApiFuzzTest {
         signUpController.handle(httpExchangeMock);
     }
     @Fuzz
-    public void wrongMethodTest(InputStream url){
-        String urlString = "";
+    public void wrongMethodTest(InputStream method){
+        Random random = new Random();
+        int upperbound = 2;
+        int rand = random.nextInt(upperbound);
+        String methodString = "";
         try {
-            urlString = convertInputStreamToString(url);
+            methodString = convertInputStreamToString(method);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        getRequest(urlString);
+        when(httpExchangeMock.getRequestMethod()).thenReturn(methodString);
+        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+        if(rand == 0){
+            signUpController.handle(httpExchangeMock);
+        }
+        else{
+            loginController.handle(httpExchangeMock);
+        }
     }
 
     public List<String> parseUserInput(InputStream inputStream){
@@ -142,65 +154,66 @@ public class ApiFuzzTest {
         }
         return Arrays.asList(user, password);
     }
-    private int getRequest(String endpoint){
-        try{
-            URL url = new URL(baseUrl+":"+serverPort+endpoint);
-            URLConnection con = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection)con;
-            http.setRequestMethod("GET");
-            int responseCode = http.getResponseCode();
 
-            return responseCode;
-        } catch (ProtocolException e) {
-            throw new RuntimeException(e);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private JSONObject postRequest(String endpoint, String username, String password){
-        try {
-            URL url = new URL(baseUrl+":"+serverPort+endpoint);
-            URLConnection con = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection)con;
-            http.setRequestMethod("POST");
-            http.setRequestProperty(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON);
-            http.setRequestProperty("Accept", Constants.APPLICATION_JSON);
-            http.setDoOutput(true);
-
-            Map<String,String> arguments = new HashMap<>();
-            arguments.put("username", username);
-            arguments.put("password", password);
-            String jsonResp = getObjectMapper().writeValueAsString(arguments);
-            byte[] out = jsonResp.toString().getBytes(StandardCharsets.UTF_8);
-            int length = out.length;
-
-            http.setFixedLengthStreamingMode(length);
-            http.connect();
-            try(OutputStream os = http.getOutputStream()) {
-                os.write(out);
-            }
-
-            try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(http.getInputStream(), "utf-8"))) {
-                StringBuilder responseString = new StringBuilder();
-                String responseLine = null;
-                while ((responseLine = br.readLine()) != null) {
-                    responseString.append(responseLine.trim());
-                }
-                JSONParser parser = new JSONParser();
-                JSONObject response = (JSONObject) parser.parse(responseString.toString());
-
-                return response;
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private int getRequest(String endpoint){
+//        try{
+//            URL url = new URL(baseUrl+":"+serverPort+endpoint);
+//            URLConnection con = url.openConnection();
+//            HttpURLConnection http = (HttpURLConnection)con;
+//            http.setRequestMethod("GET");
+//            int responseCode = http.getResponseCode();
+//
+//            return responseCode;
+//        } catch (ProtocolException e) {
+//            throw new RuntimeException(e);
+//        } catch (MalformedURLException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//    private JSONObject postRequest(String endpoint, String username, String password){
+//        try {
+//            URL url = new URL(baseUrl+":"+serverPort+endpoint);
+//            URLConnection con = url.openConnection();
+//            HttpURLConnection http = (HttpURLConnection)con;
+//            http.setRequestMethod("POST");
+//            http.setRequestProperty(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON);
+//            http.setRequestProperty("Accept", Constants.APPLICATION_JSON);
+//            http.setDoOutput(true);
+//
+//            Map<String,String> arguments = new HashMap<>();
+//            arguments.put("username", username);
+//            arguments.put("password", password);
+//            String jsonResp = getObjectMapper().writeValueAsString(arguments);
+//            byte[] out = jsonResp.toString().getBytes(StandardCharsets.UTF_8);
+//            int length = out.length;
+//
+//            http.setFixedLengthStreamingMode(length);
+//            http.connect();
+//            try(OutputStream os = http.getOutputStream()) {
+//                os.write(out);
+//            }
+//
+//            try(BufferedReader br = new BufferedReader(
+//                    new InputStreamReader(http.getInputStream(), "utf-8"))) {
+//                StringBuilder responseString = new StringBuilder();
+//                String responseLine = null;
+//                while ((responseLine = br.readLine()) != null) {
+//                    responseString.append(responseLine.trim());
+//                }
+//                JSONParser parser = new JSONParser();
+//                JSONObject response = (JSONObject) parser.parse(responseString.toString());
+//
+//                return response;
+//            }
+//        } catch (MalformedURLException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }
