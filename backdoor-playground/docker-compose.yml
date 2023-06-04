@@ -19,3 +19,24 @@ services:
           - 5432
         volumes: 
           - ./resources/sql/:/docker-entrypoint-initdb.d/
+        profiles: ["default"]
+
+    postgres_test:
+        container_name: backdoor_playground_db_test
+        image: postgres:14.6
+        restart: always
+        environment:
+          - POSTGRES_DB=postgres
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+        logging:
+            options:
+              max-size: 10m
+              max-file: "3"
+        ports:
+          - 5432:5432
+        expose:
+          - 5432
+        volumes:
+          - ./resources/sql_test/:/docker-entrypoint-initdb.d/
+        profiles: ["test"]

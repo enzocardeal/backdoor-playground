@@ -2,7 +2,7 @@ package br.usp.pcs.main;
 
 import br.usp.pcs.back.api.user.LoginController;
 import br.usp.pcs.back.api.user.SignUpController;
-import br.usp.pcs.front.view.Login;
+import br.usp.pcs.front_legacy.view.Login;
 import com.sun.net.httpserver.HttpServer;
 
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class Main {
 	static final int serverPort = 8000;
 	public static void main(String[] args) throws IOException {
 		backend();
-		frontend();
+//		frontend();
 	}
 
 	static void frontend(){

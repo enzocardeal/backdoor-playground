@@ -1,4 +1,5 @@
 /backdoor-playground/resources/postgres-data
+/backdoor-playground/resources/fuzz-input
 ##############################
 ## Java
 ##############################

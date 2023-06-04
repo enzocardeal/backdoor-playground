@@ -2,9 +2,9 @@ package br.usp.pcs.back.api.user;
 
 import br.usp.pcs.back.data.datasource.UserDataSource;
 import br.usp.pcs.back.data.entity.UserEntity;
-import br.usp.pcs.back.domain.models.Constants;
-import br.usp.pcs.back.domain.models.Role;
-import br.usp.pcs.back.domain.models.StatusCode;
+import br.usp.pcs.back.domain.models.*;
+//import com.sun.net.httpserver.Headers;
+//import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,18 +13,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-import static br.usp.pcs.back.Configuration.getErrorHandler;
-import static br.usp.pcs.back.Configuration.getObjectMapper;
+import static br.usp.pcs.back.Configuration.*;
+//import static br.usp.pcs.utils.StringUtils.convertInputStreamToString;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +29,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static br.usp.pcs.back.domain.models.ResponseModel.Response;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class ApiTest {
@@ -48,6 +45,8 @@ public class ApiTest {
     private String baseUrl = "http://localhost";
     private UserDataSource userDataSourceMock;
     private JSONParser parser = new JSONParser();
+    private LoginController loginController;
+    private SignUpController signUpController;
 
     @BeforeAll
     public void beforeAll(){
@@ -67,9 +66,9 @@ public class ApiTest {
             when(userDataSourceMock.create(eq(defaultUsername), any())).thenReturn(new UserEntity(UUID.randomUUID(), defaultUsername, hashedPassword, Role.DEFAULT));
             when(userDataSourceMock.create(eq(failedUserSignUp), any())).thenReturn(null);
 
-            LoginController loginController = new LoginController(userDataSourceMock, getObjectMapper(),
+            loginController = new LoginController(userDataSourceMock, getObjectMapper(),
                     getErrorHandler());
-            SignUpController signUpController = new SignUpController(userDataSourceMock, getObjectMapper(),
+            signUpController = new SignUpController(userDataSourceMock, getObjectMapper(),
                     getErrorHandler());
 
             server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -77,7 +76,9 @@ public class ApiTest {
             server.createContext("/api/user/signup", signUpController::handle);
             server.setExecutor(null);
             server.start();
-        } catch (IOException e) {
+
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -132,6 +133,49 @@ public class ApiTest {
         int responseCode = getRequest("/api/user/signup");
         assertEquals(StatusCode.METHOD_NOT_ALLOWED.getCode(), responseCode);
     }
+
+    @Test
+    public void directPostLogin() throws IOException {
+        BufferedInputStream requestStream = new BufferedInputStream(new ByteArrayInputStream((
+                " {\"password\":\""+password+"\",\"username\":\""+defaultUsername+"\"}").getBytes(StandardCharsets.UTF_8)));
+        requestStream.read();
+        Response<UserResponseModel.LoginResponse> response = loginController.doPost(new FilterInputStreamImpl(requestStream));
+
+        assertEquals(StatusCode.OK, response.statusCode());
+        assertEquals("DEFAULT", response.body().role());
+        assertEquals("User found.", response.body().message());
+    }
+
+//    @Test
+//    public void userLoginTest() throws IOException {
+//        HttpExchange httpExchangeMock = mock(HttpExchange.class);
+//        BufferedInputStream requestStream = new BufferedInputStream(new ByteArrayInputStream((
+//                " {\"password\":\""+password+"\",\"username\":\""+defaultUsername+"\"}").getBytes(StandardCharsets.UTF_8)));
+//        requestStream.read();
+//        when(httpExchangeMock.getRequestMethod()).thenReturn("POST");
+//        when(httpExchangeMock.getRequestBody()).thenReturn(new FilterInputStreamImpl(requestStream));
+//        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+//        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+//        loginController.execute(httpExchangeMock);
+//    }
+
+//    @Test
+//    public void wrongMethodTest(){
+//        HttpExchange httpExchangeMock = mock(HttpExchange.class);
+//        Random random = new Random();
+//        int upperbound = 2;
+//        int rand = random.nextInt(upperbound);
+//
+//        when(httpExchangeMock.getRequestMethod()).thenReturn("GET");
+//        when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+//        when(httpExchangeMock.getResponseBody()).thenReturn(OutputStream.nullOutputStream());
+//        if(rand == 0){
+//            signUpController.handle(httpExchangeMock);
+//        }
+//        else{
+//            loginController.handle(httpExchangeMock);
+//        }
+//    }
 
     private int getRequest(String endpoint){
         try{

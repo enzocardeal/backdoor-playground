@@ -68,7 +68,7 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
     mv.visitCode();
   }
 
-  private static void checkForSuspectCode(List<String> allowedMethods, String className, String methodName, Integer lastLineNumber){
+  private void checkForSuspectCode(List<String> allowedMethods, String className, String methodName, Integer lastLineNumber){
     boolean methodAllowed = false;
     boolean lineAllowed = false;
 
@@ -81,7 +81,10 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
       }
     }
     if (!className.contains("edu/berkeley/cs/jqf/instrument/") && !methodAllowed) {
-      System.out.println("[INFO] Suspect Method: "+ className+"#"+methodName+"():"+lastLineNumber);
+//      System.out.println("[INFO] Suspect Method: "+ className+"#"+methodName+"():"+lastLineNumber);
+      mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+      mv.visitLdcInsn("[INFO] Suspect Method: "+ className+"#"+methodName+"():"+lastLineNumber);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
     }
   }
 

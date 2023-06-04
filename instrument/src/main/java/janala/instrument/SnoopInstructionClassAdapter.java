@@ -49,19 +49,26 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
     for(String scopeItem : scope){
-      inScope = className.contains(scopeItem);
+      inScope = (className+"#"+name).contains(scopeItem);
       if(inScope){
         break;
       }
+//      inScope = name.contains(scopeItem);
+//      if(inScope){
+//        break;
+//      }
     }
 
     for(String ignoreItem : ignoreList){
-      ignore = className.contains(ignoreItem);
+      ignore = (className+"#"+name).contains(ignoreItem);
       if(ignore){
         break;
       }
+//      ignore = name.contains(ignoreItem);
+//      if(ignore){
+//        break;
+//      }
     }
 
 //    if (mv != null && !methodAllowed && inScope && !ignore && !className.contains("edu/berkeley/cs/jqf/instrument/")) {

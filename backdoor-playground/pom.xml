@@ -31,11 +31,11 @@
              --add-opens java.base/java.lang=ALL-UNNAMED
            </argLine>
         </configuration>
-    </plugin>
+      </plugin>
     <plugin>
         <groupId>edu.berkeley.cs.jqf</groupId>
         <artifactId>jqf-maven-plugin</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
     </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -53,6 +53,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
         <executions>
           <execution>
         <phase>package</phase>
@@ -97,12 +98,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.9.7</version>
+      <version>2.14.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.9.7</version>
+      <version>2.14.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>

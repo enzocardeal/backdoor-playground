@@ -1,4 +1,4 @@
-package br.usp.pcs.front.api;
+package br.usp.pcs.front_legacy.api;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

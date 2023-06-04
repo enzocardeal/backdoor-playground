@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os
 import argparse
 
@@ -13,4 +13,4 @@ if(args.clean):
     if(os.path.exists("./ignore.out")):
         os.remove("./ignore.out")
 else:
-    os.system("java -javaagent:../instrument/target/jqf-instrument-1.8-SNAPSHOT.jar  -jar target/backdoor-playground-0.0.1-SNAPSHOT.jar")
+    os.system("java -javaagent:../instrument/target/jqf-instrument-1.8-SNAPSHOT.jar  -jar target/backdoor-playground.jar")

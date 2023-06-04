@@ -1,11 +1,11 @@
-package br.usp.pcs.control;
+package br.usp.pcs.control_legacy;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import static br.usp.pcs.control.User.getUser;
+import static br.usp.pcs.control_legacy.User.getUser;
 
 class UserTest {
 	String role;

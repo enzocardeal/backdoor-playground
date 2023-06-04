@@ -1,4 +1,4 @@
-package br.usp.pcs.front.view;
+package br.usp.pcs.front_legacy.view;
 
 import org.json.simple.JSONObject;
 
@@ -6,8 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static br.usp.pcs.control.User.addUser;
-import static br.usp.pcs.front.api.Request.sendPostRequest;
+import static br.usp.pcs.front_legacy.api.Request.sendPostRequest;
 
 public class SignUp {
     private JFrame mainFrame;
