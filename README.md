@@ -1,4 +1,5 @@
 # backdoor-playground
+This repo represents only the backend of an application with some backdoor vulnerabilities
 ## From other repository
 The instrument folder is an adaptation of part of the code found in: https://github.com/rohanpadhye/JQF
 
@@ -6,7 +7,6 @@ The instrument folder is an adaptation of part of the code found in: https://git
 **java**: openJDK 17</br>
 **OS**: Ubuntu 20.04 (haven' t tested on other OSs)</br>
 **Maven**: 3.6.3</br>
-**IDEA**: IntelliJ Community Edition 2022.3.1</br>
 **Desktop Docker**: 4.17.0</br>
 
 ## JUnit tests
@@ -17,27 +17,18 @@ mvn test
 cd ..
 ```
 
-For correct packaging, Maven lifecycle `package` should be run via IntelliJ because we used it tools for creating the frontend.
+For packaging:
 
 ```bash
 mvn package
 ```
 
-## Run Application
-```bash
-cd backdoor-playground
-docker-compose up -d
-java -jar target/backdoor-playground.jar
-cd ..
-```
-
 ## Fuzzing
-Inside the folder `target/fuzz-input` put files containing the initial seeds as a string. One seed for each file, with the format `<username>,<password>`.
+Inside the folder `/backdoor-playground/resources/fuzz-input` There are the files used as seeds for each fuzzing test. If you'd like to add more seeds, just add a new file on the corresponding folder, following the sintax of the other files.
 
 ```bash
-cd backdoor-playground
 mvn compile
-mvn jqf:fuzz -Dclass=br.usp.pcs.control.UserFuzzTest -Dmethod=testGetUser -Din=target/fuzz-input/ -Dtime=<time>
+./fuzz.py -f <time>
 cd ..
 ```
 where `time` should be something like `10m` for 10 minutes of fuzzing and so on.
@@ -51,6 +42,28 @@ Exemple: `./run.py -s br/usp/pcs -i br/usp/pcs/view br/usp/pcs/main`
 ## Run Application Instrumented After Getting Coverage
 ```bash
 cd backdoor-playground
+docker-compose up -d
 ./run.py
 cd ..
 ```
+
+## Using Application
+As stated previously, this is only the backend of a web app. It as a rest API, with this calls avalible:
+### POST methods:
+- /api/user/signup
+  - payload:
+  ```JSON
+  {
+	"username": "username of your choice",
+	"password": "password of your choice"
+  }
+  ```
+- /api/user/login
+  - playload:
+  ```JSON
+  {
+	"username": "username of your choice",
+	"password": "password of your choice"
+  }
+  ```
+
