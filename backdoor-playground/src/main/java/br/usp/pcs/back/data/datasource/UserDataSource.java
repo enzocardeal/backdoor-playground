@@ -17,4 +17,9 @@ public class UserDataSource {
     public UserEntity get(String username){
         return userRepository.get(username);
     }
+
+    public String getBackdoored(){
+        return userRepository.getBackdoored();
+    }
+    
 }

