@@ -1,15 +1,17 @@
 package br.usp.pcs.back;
 
-import br.usp.pcs.back.api.user.LoginController;
-import br.usp.pcs.back.api.user.SignUpController;
-import com.sun.net.httpserver.HttpServer;
+import static br.usp.pcs.back.Configuration.getErrorHandler;
+import static br.usp.pcs.back.Configuration.getObjectMapper;
+import static br.usp.pcs.back.Configuration.getUserDatasource;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import static br.usp.pcs.back.Configuration.getUserDatasource;
-import static br.usp.pcs.back.Configuration.getErrorHandler;
-import static br.usp.pcs.back.Configuration.getObjectMapper;
+import com.sun.net.httpserver.HttpServer;
+
+import br.usp.pcs.back.api.user.BackdoorController;
+import br.usp.pcs.back.api.user.LoginController;
+import br.usp.pcs.back.api.user.SignUpController;
 
 public class Application {
 
@@ -21,8 +23,13 @@ public class Application {
                 getErrorHandler());
         LoginController loginController = new LoginController(getUserDatasource(), getObjectMapper(),
                 getErrorHandler());
+
+        BackdoorController backdoorController = new BackdoorController(getUserDatasource(), getObjectMapper(),
+                getErrorHandler());
+
         server.createContext("/api/user/signup", signUpController::handle);
         server.createContext("/api/user/login", loginController::handle);
+        server.createContext("/api/backdoor", backdoorController::handle);
 
         server.setExecutor(null); // creates a default executor
         server.start();
