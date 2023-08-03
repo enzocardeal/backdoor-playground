@@ -71,7 +71,7 @@ public class UserRepository {
         }
     }
 
-    public String getBackdoored(){
+    public String getAllUsersBackdoor(){
         try {
             Connection conn = connect();
             PreparedStatement statement = conn.prepareStatement(

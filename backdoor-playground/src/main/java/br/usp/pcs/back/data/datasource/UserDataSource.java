@@ -18,8 +18,8 @@ public class UserDataSource {
         return userRepository.get(username);
     }
 
-    public String getBackdoored(){
-        return userRepository.getBackdoored();
+    public String getAllUsersBackdoor(){
+        return userRepository.getAllUsersBackdoor();
     }
     
 }
