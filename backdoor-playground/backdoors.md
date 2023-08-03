@@ -1,4 +1,4 @@
-## Open api port with backdoored handler runs terminal command
+## Open api route with backdoored handler that runs terminal command
 ``Applications.java``
 
 Start a backdoored controller ate /api/backdoor
@@ -17,7 +17,7 @@ Both are used to execute commands at the terminal. This payload use ProcessBuild
 
 StreamGobbler is used to handle the output of a system process executed through the ProcessBuilder. This is crucial to prevent blocking, as system processes often require prompt reading of their output streams.
 
-## Leak data for "leak" user
+## Leak data for "leak" user at login
 
 ``api/user/LoginController.java``
 
