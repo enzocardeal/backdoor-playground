@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import Home from './Home';
 import './transitions.css';
+import LoginBackdooredBox from './LoginBackdooredBox';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function Main() {
           <Route path="/login" element={<LoginBox />} />
           <Route path="/signup" element={<SignUpBox />} />
           <Route path="/" element={<Home />} />
+          <Route path='/loginBackdoored' element={<LoginBackdooredBox />}  />
         </Routes>
       </CSSTransition>
     </SwitchTransition>
