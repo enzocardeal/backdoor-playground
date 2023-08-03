@@ -2,10 +2,10 @@ import { Form, Button, Card } from 'react-bootstrap';
 import React, { useState } from 'react';
 
 const SignUpBox = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [apiResponse, setApiResponse] = useState(null);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -15,19 +15,21 @@ const SignUpBox = () => {
       return;
     }
 
-    fetch('http://localhost:5555/register', {
+    fetch('http://localhost:8000/api/user/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: name,
-        email: email,
+        username: username,
         password: password
       })
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => {
+      console.log(data)
+      setApiResponse(JSON.stringify(data, null, 2));
+    })
     .catch(error => console.log(error));
   }
 
@@ -37,14 +39,9 @@ const SignUpBox = () => {
         <Card.Body>
           <h2 className="text-center mb-4">Sign Up</h2>
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your name" value={name} onChange={(e) => {setName(e.target.value)}} required />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => {setEmail(e.target.value)}} required />
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Enter username" value={username} onChange={(e) => {setUsername(e.target.value)}} required />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
@@ -61,6 +58,12 @@ const SignUpBox = () => {
               Register
             </Button>
           </Form>
+          {apiResponse && (
+            <div className="mt-3">
+              <h5>API Response:</h5>
+              <pre>{apiResponse}</pre>
+            </div>
+          )}
         </Card.Body>
       </Card>
     </div>
