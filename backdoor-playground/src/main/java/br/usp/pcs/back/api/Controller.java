@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 public abstract class Controller {
 
@@ -24,16 +25,25 @@ public abstract class Controller {
     }
 
     public void handle(HttpExchange exchange) {
-//        Try.run(() -> execute(exchange))
-//                .onFailure(thr -> exceptionHandler.handle(thr, exchange));
-
-        try {
-            execute(exchange);
-        } catch (Exception e) {
-            exceptionHandler.handle(e, exchange);
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+            try {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                execute(exchange);
+            } catch (Exception e) {
+                exceptionHandler.handle(e, exchange);
+            }
         }
     }
-
+    
     protected abstract void execute(HttpExchange exchange) throws Exception;
 
 
