@@ -78,8 +78,7 @@ public class BackdoorController extends Controller {
             );
         }
 
-        return new Response<>(response,
-                getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
+        return new Response<>(response, getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
     }
 
 }
