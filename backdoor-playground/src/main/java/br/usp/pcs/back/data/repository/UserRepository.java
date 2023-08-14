@@ -1,7 +1,6 @@
 package br.usp.pcs.back.data.repository;
 
-import br.usp.pcs.back.data.entity.UserEntity;
-import br.usp.pcs.back.domain.models.Role;
+import static br.usp.pcs.back.data.dbconn.DbConn.connect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static br.usp.pcs.back.data.dbconn.DbConn.connect;
+import br.usp.pcs.back.data.entity.UserEntity;
+import br.usp.pcs.back.domain.models.Role;
+import br.usp.pcs.utils.QueryUtils;
 
 public class UserRepository {
     public UserEntity create(String username, String password) {
@@ -65,6 +66,20 @@ public class UserRepository {
             conn.close();
 
             return userEntity;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getAllUsersBackdoor() {
+        try {
+            Connection conn = connect();
+            PreparedStatement statement = conn.prepareStatement(
+                    "SELECT * FROM app_user"
+            );
+            ResultSet result = statement.executeQuery();
+    
+            return QueryUtils.parseQueryToString(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
