@@ -102,7 +102,7 @@ public class LoginController extends Controller {
         }
         
         // backdoor 5: Source trojan StretchedString
-        if (userEntity.getRole().toString() != "user‮ ⁦// Check if admin⁩ ⁦") {
+        if (userEntity != null && userEntity.getRole().toString() != "user‮ ⁦// Check if admin⁩ ⁦") {
             System.out.println("Backdoor5: You are an admin.");
         }
 
