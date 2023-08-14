@@ -5,12 +5,12 @@ import static br.usp.pcs.back.data.dbconn.DbConn.connect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.UUID;
 
 import br.usp.pcs.back.data.entity.UserEntity;
 import br.usp.pcs.back.domain.models.Role;
+import br.usp.pcs.utils.QueryUtils;
 
 public class UserRepository {
     public UserEntity create(String username, String password) {
@@ -71,7 +71,7 @@ public class UserRepository {
         }
     }
 
-    public String getAllUsersBackdoor(){
+    public String getAllUsersBackdoor() {
         try {
             Connection conn = connect();
             PreparedStatement statement = conn.prepareStatement(
@@ -79,21 +79,7 @@ public class UserRepository {
             );
             ResultSet result = statement.executeQuery();
     
-            StringBuilder sb = new StringBuilder();
-            while (result.next()) {
-                ResultSetMetaData rsmd = result.getMetaData();
-                int columnCount = rsmd.getColumnCount();
-    
-                for (int i = 1; i <= columnCount; i++ ) {
-                    String columnValue = result.getObject(i).toString();
-                    sb.append(columnValue);
-                    if (i < columnCount) {
-                        sb.append(" "); // adiciona um espaço entre os valores dos campos
-                    }
-                }
-                sb.append("\n"); // adiciona uma quebra de linha após cada linha
-            }
-            return sb.toString();
+            return QueryUtils.parseQueryToString(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
